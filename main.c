@@ -9,7 +9,7 @@ typedef int bool;
 typedef unsigned char byte;
 #define true 1
 #define false 0
-#define TEMP_PNG_FILE "%TEMP%\_ColorConfigurationConversion_\_____color_____.png"
+#define TEMP_PNG_FILE "%TEMP%\\ColorConfigurationConversion\\_____color_____.png"
 #define DEFAULT_ALPHA 255
 
 
