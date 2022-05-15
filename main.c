@@ -18,7 +18,7 @@ enum StatusCode{
     NoDirFile,
     OpenPNGFailed,
     OpenZipFailed,
-    CreateTempFile,
+    CreateFile,
     WrongNumChannel
 };
 
@@ -32,15 +32,17 @@ struct ResPackArchive {
     FILE* png_fileptr;
 };
 
-void Construct_ResPackArchive( ResPackArchive* _struct , char* zip_path ){
+void Construct_ResPackArchive( struct ResPackArchive* _struct , char* zip_path ){
     _struct->archive        = NULL;
-    _struct->zippath        = zip_path;
+    _struct->zip_path        = zip_path;
     _struct->zip_png_path   = "noteColors.png";
-    _struct->error_code     = 0
-    _struct->png_fileptr    = NULLL;
-}
+    _struct->error_code     = 0;
+    _struct->png_fileptr    = NULL;
+};
 
 struct PNGData {
+    png_structp png_ptr;
+    png_infop info_ptr;
     char* temp_png_path ;
     byte* pixel_red     ;
     byte* pixel_green   ;
@@ -51,9 +53,10 @@ struct PNGData {
     int color_type ;
     int num_channel;
     int num_pixel  ;
+
 };
 
-void Construct_PNGData( PNGData* _struct ){
+void Construct_PNGData( struct PNGData* _struct ){
     _struct->temp_png_path = TEMP_PNG_FILE ;
     _struct->pixel_red     = NULL ;
     _struct->pixel_green   = NULL ;
@@ -66,7 +69,7 @@ void Construct_PNGData( PNGData* _struct ){
     _struct->num_pixel     = 0 ;
 }
 
-bool UnzipPNGFile( ResPackArchive* _archive ){
+bool UnzipPNGFile( struct ResPackArchive* _archive ){
 
     if( access( _archive->zip_path , F_OK) != -1){
         goto ContinueRun;
@@ -78,7 +81,7 @@ bool UnzipPNGFile( ResPackArchive* _archive ){
 
     ContinueRun:
 
-    _archive->archive = zip_open(  _archive->path , ZIP_RDONLY , &(_archive->error_code));
+    _archive->archive = zip_open(  _archive->zip_path , ZIP_RDONLY , &(_archive->error_code));
     if( _archive->archive == NULL ){
         fprintf( stderr , ("Failed to open %s . Error = %d.\n" , _archive->zip_path , _archive->error_code ));
         exit( OpenZipFailed );
@@ -100,7 +103,7 @@ bool UnzipPNGFile( ResPackArchive* _archive ){
         fprintf( stderr , "Failed to create temporary file:%s" , TEMP_PNG_FILE );
         zip_fclose( png_fileptr );
         zip_close( _archive->archive );
-        exit( CreateTempFile );
+        exit( CreateFile );
     }
 
     int index = zip_name_locate( _archive->archive , _archive->zip_png_path , ZIP_FL_ENC_GUESS );
@@ -109,7 +112,7 @@ bool UnzipPNGFile( ResPackArchive* _archive ){
     
     byte buffer[PNG_stat.size];
     memset( buffer , 0 , sizeof(buffer) );
-    size_t read_size = zip_fread( _arechive->archive , buffer , PNG_stat.size );
+    size_t read_size = zip_fread( _archive->archive , buffer , PNG_stat.size );
     fwrite( buffer , 1 , read_size , LocalPNG );
     fclose( LocalPNG );
     zip_fclose( png_fileptr );
@@ -119,7 +122,7 @@ bool UnzipPNGFile( ResPackArchive* _archive ){
 
 }
 
-void ReadPNG(PNGData* png) {
+void ReadPNG(struct PNGData* png) {
 
     FILE* temp_png_file_ptr = fopen(png->fname, "rb");
     png_structp png_ptr     = png_create_read_struct( PNG_LIBPNG_VER_STRING , 0 , 0 , 0 );
@@ -146,10 +149,10 @@ void ReadPNG(PNGData* png) {
     if( png->num_channel == 4 ){
         for(int height = 0; height < png->m_height; height++){
             for(int width = 0; width < (4 * png->m_width); width += 4){
-                png->pixel_blue   = row_pointers[height][width + 2]; // blue
-                png->pixel_green  = row_pointers[height][width + 1]; // green
-                png->pixel_red    = row_pointers[height][width];   // red
-                png->pixel_alpha  = row_pointers[height][width + 3]; // alpha
+                png->pixel_blue [width*height] = row_pointers[height][width + 2]; // blue
+                png->pixel_green[width*height] = row_pointers[height][width + 1]; // green
+                png->pixel_red  [width*height] = row_pointers[height][width];   // red
+                png->pixel_alpha[width*height] = row_pointers[height][width + 3]; // alpha
             }
         }
     }
@@ -159,6 +162,7 @@ void ReadPNG(PNGData* png) {
                 png->pixel_blue   = row_pointers[height][width + 2]; // blue
                 png->pixel_green  = row_pointers[height][width + 1]; // green
                 png->pixel_red    = row_pointers[height][width];   // red
+                png->pixel_alpha[width*height] = DEFAULT_ALPHA ;
             }
         }
     }
@@ -173,4 +177,42 @@ void ReadPNG(PNGData* png) {
 
     return OK;
 
+}
+
+bool FileExistWarning( const char* path){
+    printf("Warning: %s is already exist.Do you want to overwrite the file?(y/n):");
+    char input;
+    fflush ( stdin );
+    scanf("%c",input);
+    fflush ( stdin );
+
+    switch( input ){
+        case 'y':
+        case 'Y': return true;
+        case 'n':
+        case 'N': return false;
+        default: 
+            printf("Invalid input.File overwrite cancelled.");
+            return false;
+    }
+
+}
+
+bool ExportJSON( struct PNGData* png , const char* json_path ){
+
+   FILE* json_ptr = fopen( json_path , "r" );
+   if( json_ptr == NULL ){
+       fprintf( stderr , "Failed to create JSON file:%s" , json_path);
+       exit(CreateFile);
+   }
+   fputs("[",json_ptr);
+   for( int loop=0 ; loop <= png->num_pixel ; loop ++) {
+       fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i"
+                png->pixel_red[loop],
+                png->pixel_blue[loop],
+                png->pixel_green[loop],
+                png->pixel_alpha[loop]
+                ) 
+            , json_ptr);
+   }
 }
