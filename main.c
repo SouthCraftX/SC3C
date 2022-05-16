@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <io.h>
 #include <png.h>
+#include <time.h>
 
 typedef int bool;
 typedef unsigned char byte;
@@ -11,6 +12,7 @@ typedef unsigned char byte;
 #define false 0
 #define TEMP_PNG_FILE "%TEMP%\\ColorConfigurationConversion\\_____color_____.png"
 #define DEFAULT_ALPHA 255
+#define NUM_RAMDOM_CHANGES 233
 
 
 enum StatusCode{
@@ -19,7 +21,8 @@ enum StatusCode{
     OpenPNGFailed,
     OpenZipFailed,
     CreateFile,
-    WrongNumChannel
+    WrongNumChannel,
+    WriteJson
 };
 
 enum StatusCode _scode;
@@ -108,7 +111,7 @@ bool UnzipPNGFile( struct ResPackArchive* _archive ){
 
     int index = zip_name_locate( _archive->archive , _archive->zip_png_path , ZIP_FL_ENC_GUESS );
     zip_stat_t PNG_stat;
-    zip_stat_index(_archive->archive,index, s, &PNG_stat);
+    zip_stat_index(_archive->archive,index, ZIP_FL_UNCHANGED, &PNG_stat);
     
     byte buffer[PNG_stat.size];
     memset( buffer , 0 , sizeof(buffer) );
@@ -124,7 +127,7 @@ bool UnzipPNGFile( struct ResPackArchive* _archive ){
 
 void ReadPNG(struct PNGData* png) {
 
-    FILE* temp_png_file_ptr = fopen(png->fname, "rb");
+    FILE* temp_png_file_ptr = fopen(TEMP_PNG_FILE, "rb");
     png_structp png_ptr     = png_create_read_struct( PNG_LIBPNG_VER_STRING , 0 , 0 , 0 );
     png_infop info_ptr      = png_create_info_struct( png->png_ptr );
     setjmp( png_jmpbuf( png->png_ptr ) );
@@ -207,12 +210,41 @@ bool ExportJSON( struct PNGData* png , const char* json_path ){
    }
    fputs("[",json_ptr);
    for( int loop=0 ; loop <= png->num_pixel ; loop ++) {
-       fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i"
-                png->pixel_red[loop],
-                png->pixel_blue[loop],
-                png->pixel_green[loop],
-                png->pixel_alpha[loop]
-                ) 
-            , json_ptr);
+        byte is_successful = fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
+                            png->pixel_red[loop],
+                            png->pixel_blue[loop],
+                            png->pixel_green[loop],
+                            png->pixel_alpha[loop]
+                            ) 
+                        , json_ptr);
+        if( is_successful ==  EOF ){
+            fprintf( stderr , "Failed to write JSON file!");
+            exit()
+        }
    }
+   fputs( "\b]" , json_ptr ); 
+}
+
+bool RandomColourSequence( struct PNGData* png ){
+
+    for( int step = 0 ; step < NUM_RAMDOM_CHANGES ; ++step ){
+        byte temp_red , temp_blue , temp_green , temp_alpha ;
+        
+        int swap_x = rand()%(png->num_pixel) , swap_y = rand()%(png->num_pixel);
+        temp_red   = png->pixel_red  [ swap_y ];
+        temp_blue  = png->pixel_blue [ swap_y ];
+        temp_green = png->pixel_green[ swap_y ];
+        temp_alpha = png->pixel_alpha[ swap_y ];
+
+        png->pixel_red  [ swap_y ] =   png->pixel_red  [ swap_x ] ;
+        png->pixel_blue [ swap_y ] =   png->pixel_blue [ swap_x ] ;
+        png->pixel_green[ swap_y ] =   png->pixel_green[ swap_x ] ;
+        png->pixel_alpha[ swap_y ] =   png->pixel_alpha[ swap_x ] ;
+
+        png->pixel_red  [ swap_x ] = temp_red  ;
+        png->pixel_blue [ swap_x ] = temp_blue ;
+        png->pixel_green[ swap_x ] = temp_green;
+        png->pixel_alpha[ swap_x ] = temp_alpha;
+
+    }
 }
