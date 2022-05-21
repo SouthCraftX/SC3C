@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <zip.h>
-#include <stdlib.h>
 #include <io.h>
 #include <png.h>
 #include <time.h>
@@ -10,10 +9,21 @@ typedef int bool;
 typedef unsigned char byte;
 #define true 1
 #define false 0
-#define TEMP_PNG_FILE "%TEMP%\\ColorConfigurationConversion\\_____color_____.png"
+#define TEMP_PNG_FILE "TEMP\\ColorConfigurationConversion\\_____color_____.png"
 #define DEFAULT_ALPHA 255
 #define NUM_RAMDOM_CHANGES 233
 
+const static char* help_text =  "Help Page of SC3C\n"
+                                "Author: South Craft\n"
+                                "Version: SC3C Alpha 1.0\n"
+                                "Built with GCC 11.2.0\n"
+                                "Github: https://github.com/SouthCraftX/SC3C\n\n"
+                                "Usage: sc3c.exe -i <ZIP_PATH> -o <JSON_PATH> [OPTION]\n\n"
+                                " -i\tSpecifies the resourcepack.\n"
+                                " -o\tSpecifies the JSON file.\n"
+                                " -y\tOverwrite the JSON file without asking.\n"
+                                " -r\tRandomise the colour order.\n"
+                                " -e\tDon't show non-error messages while converting.\n";
 
 enum StatusCode{
     OK = 0,
@@ -27,7 +37,7 @@ enum StatusCode{
 
 enum StatusCode _scode;
 
-struct ResPackArchive {
+struct _ResPackArchive {
     zip_t* archive;
     char* zip_path ;
     char* zip_png_path ; 
@@ -35,7 +45,7 @@ struct ResPackArchive {
     FILE* png_fileptr;
 };
 
-void Construct_ResPackArchive( struct ResPackArchive* _struct , char* zip_path ){
+void Construct_ResPackArchive( struct _ResPackArchive* _struct , char* zip_path ){
     _struct->archive        = NULL;
     _struct->zip_path        = zip_path;
     _struct->zip_png_path   = "noteColors.png";
@@ -43,7 +53,7 @@ void Construct_ResPackArchive( struct ResPackArchive* _struct , char* zip_path )
     _struct->png_fileptr    = NULL;
 };
 
-struct PNGData {
+struct _PNGData {
     png_structp png_ptr;
     png_infop info_ptr;
     char* temp_png_path ;
@@ -59,7 +69,7 @@ struct PNGData {
 
 };
 
-void Construct_PNGData( struct PNGData* _struct ){
+void Construct_PNGData( struct _PNGData* _struct ){
     _struct->temp_png_path = TEMP_PNG_FILE ;
     _struct->pixel_red     = NULL ;
     _struct->pixel_green   = NULL ;
@@ -72,7 +82,62 @@ void Construct_PNGData( struct PNGData* _struct ){
     _struct->num_pixel     = 0 ;
 }
 
-bool UnzipPNGFile( struct ResPackArchive* _archive ){
+
+bool UnzipPNGFile( struct _ResPackArchive* _archive ){
+
+    if( access( _archive->zip_path , F_OK) != -1){
+        goto ContinueRun;
+    }
+    else{
+        printf("%s is not exist." , _archive->zip_path );
+        exit( NoDirFile );
+    }
+
+    ContinueRun:
+
+    _archive->archive = zip_open(  _archive->zip_path , ZIP_RDONLY , &(_archive->error_code));
+    if( _archive->archive == NULL ){
+        //char error_message[2048];
+        //sprintf( error_message , "Failed to open %s . Error = %d.\n" , _archive->zip_path , _archive->error_code  );
+        fprintf( stderr , "Failed to open %s . Error = %d.\n" , _archive->zip_path , _archive->error_code );
+        exit( OpenZipFailed );
+    }
+    printf( "%s is successfully opened.\n" , _archive->zip_path );
+
+    zip_file_t* png_fileptr;
+    png_fileptr = zip_fopen(_archive->archive ,  _archive->zip_png_path , ZIP_FL_COMPRESSED);
+
+    if( png_fileptr == NULL){
+        fprintf( stderr , "Failed to open %s in %s.The resource pack may not include color configurations.\n", _archive->zip_png_path , _archive->zip_path );
+        zip_close( _archive->archive );
+        exit( OpenPNGFailed );
+    }
+    printf("%s\\%s is successfully opened.\n",_archive->zip_path,_archive->zip_png_path);
+
+    FILE* local_png = fopen( TEMP_PNG_FILE , "w+" );
+    if( local_png == NULL ){
+        fprintf( stderr , "Failed to create temporary file:%s" , TEMP_PNG_FILE );
+        zip_fclose( png_fileptr );
+        zip_close( _archive->archive );
+        exit( CreateFile );
+    }
+
+    int index = zip_name_locate( _archive->archive , _archive->zip_png_path , ZIP_FL_ENC_GUESS );
+    zip_stat_t png_stat;
+    zip_stat_index(_archive->archive,index, ZIP_FL_UNCHANGED, &png_stat);
+    
+    byte buffer[png_stat.size];
+    memset( buffer , 0 , sizeof(buffer) );
+    size_t read_size = zip_fread( png_fileptr  , buffer , png_stat.size );
+    fwrite( buffer , 1 , read_size , local_png );
+    fclose( local_png );
+    zip_fclose( png_fileptr );
+    zip_close( _archive->archive );
+    printf("Successfully create tempoary file.\n");
+    return OK;
+
+}
+
 
     if( access( _archive->zip_path , F_OK) != -1){
         goto ContinueRun;
@@ -125,7 +190,7 @@ bool UnzipPNGFile( struct ResPackArchive* _archive ){
 
 }
 
-void ReadPNG(struct PNGData* png) {
+void ReadPNG(struct _PNGData* png) {
 
     FILE* temp_png_file_ptr = fopen(TEMP_PNG_FILE, "rb");
     png_structp png_ptr     = png_create_read_struct( PNG_LIBPNG_VER_STRING , 0 , 0 , 0 );
@@ -201,7 +266,7 @@ bool FileExistWarning( const char* path){
 
 }
 
-bool ExportJSON( struct PNGData* png , const char* json_path ){
+bool ExportJSON( struct _PNGData* png , const char* json_path ){
 
    FILE* json_ptr = fopen( json_path , "r" );
    if( json_ptr == NULL ){
@@ -220,7 +285,7 @@ bool ExportJSON( struct PNGData* png , const char* json_path ){
         if( is_successful ==  EOF ){
             fprintf( stderr , "Failed to write JSON file!");
             fclose( json_ptr );
-            exit();
+            exit(WriteJson);
         }
    }
    fputs( "\b]" , json_ptr ); 
@@ -228,7 +293,7 @@ bool ExportJSON( struct PNGData* png , const char* json_path ){
    
 }
 
-bool RandomColourSequence( struct PNGData* png ){
+bool RandomColourSequence( struct _PNGData* png ){
 
     for( int step = 0 ; step < NUM_RAMDOM_CHANGES ; ++step ){
         byte temp_red , temp_blue , temp_green , temp_alpha ;
@@ -250,4 +315,17 @@ bool RandomColourSequence( struct PNGData* png ){
         png->pixel_alpha[ swap_x ] = temp_alpha;
 
     }
+}
+
+void PutHelpInfo(){
+
+}
+
+
+bool ArgcProcess( struct _PNGData*  png , struct _ResPackArchive* respack , const int* argn , const char* argc[] ){
+
+}
+
+int main( int argn , char* argc[]  ){
+
 }
