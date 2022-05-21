@@ -219,10 +219,13 @@ bool ExportJSON( struct PNGData* png , const char* json_path ){
                         , json_ptr);
         if( is_successful ==  EOF ){
             fprintf( stderr , "Failed to write JSON file!");
-            exit()
+            fclose( json_ptr );
+            exit();
         }
    }
    fputs( "\b]" , json_ptr ); 
+   fclose( json_ptr );
+   
 }
 
 bool RandomColourSequence( struct PNGData* png ){
