@@ -42,10 +42,11 @@ inline void QUITMSG( const char* msg ){
     exit();
 }
 
-int main(){
+int unzipper(){
 
     //char* zip_path;
     int error_code = ZIP_ERRNO;
+    byte* io_buffer = NULL;
     unzFile zipfile =  NULL;
     unz_global_info64 global_info;
     unz_file_info64 file_info;
@@ -75,8 +76,7 @@ int main(){
 
         if( file_info.uncompressed_size > 1024*1024 )
             QUITMSG(" PNG file is too large.");
-
-        byte* io_buffer = NULL;
+        
         io_buffer = (byte*)malloc( file_info.uncompressed_size );
         if( io_buffer == NULL )
             QUITMSG( "Failed to allocate memory for unziping.");
@@ -86,6 +86,14 @@ int main(){
         if( read_n < file_info.uncompressed_size)
             QUITMSG(" Error size.");
 
+        unzCloseCurrentFile( zipfile );
+        unzClose( zipfile );
+
+        break;
+        GOTOLAB_NEXTFILE:
+            gonext_ret = unzGoToNextFile( zipfile );
+        }
+
         FILE* write_png_fptr = fopen( PATH_TO_UNZIP , "wb" );
         if( write_png_fptr == NULL)
             QUITMSG( "Failed to create temporary file." );
@@ -93,13 +101,6 @@ int main(){
         if( !writepng( io_buffer , file_info.uncompressed_size , write_png_fptr ))
             QUITMSG( "Failed to write temporary file." );
     
-
-        break;
-        GOTOLAB_NEXTFILE:
-            gonext_ret = unzGoToNextFile( zipfile );
-        }
-
-
     }
     
 
