@@ -5,84 +5,14 @@
 #include <png.h>
 #include <time.h>
 
-typedef int bool;
-typedef unsigned char byte;
-#define true 1
-#define false 0
-#define TEMP_PNG_FILE "TEMP\\ColorConfigurationConversion\\_____color_____.png"
-#define DEFAULT_ALPHA 255
-#define NUM_RAMDOM_CHANGES 233
+#include "defines.h"
+#include "construct_func.h"
+#include "png_unzipper.h"
+//#define TEMP_PNG_FILE "TEMP\\ColorConfigurationConversion\\_____color_____.png"
 
-const static char* help_text =  "Help Page of SC3C\n"
-                                "Author: South Craft\n"
-                                "Version: SC3C Alpha 1.0\n"
-                                "Built with GCC 11.2.0\n"
-                                "Github: https://github.com/SouthCraftX/SC3C\n\n"
-                                "Usage: sc3c.exe -i <ZIP_PATH> -o <JSON_PATH> [OPTION]\n\n"
-                                " -i\tSpecifies the resourcepack.\n"
-                                " -o\tSpecifies the JSON file.\n"
-                                " -y\tOverwrite the JSON file without asking.\n"
-                                " -r\tRandomise the colour order.\n"
-                                " -e\tDon't show non-error messages while converting.\n";
+//#define NUM_RAMDOM_CHANGES 233
 
-enum StatusCode{
-    OK = 0,
-    NoDirFile,
-    OpenPNGFailed,
-    OpenZipFailed,
-    CreateFile,
-    WrongNumChannel,
-    WriteJson
-};
-
-enum StatusCode _scode;
-
-struct _ResPackArchive {
-    zip_t* archive;
-    char* zip_path ;
-    char* zip_png_path ; 
-    int error_code;
-    FILE* png_fileptr;
-};
-
-void Construct_ResPackArchive( struct _ResPackArchive* _struct , char* zip_path ){
-    _struct->archive        = NULL;
-    _struct->zip_path        = zip_path;
-    _struct->zip_png_path   = "noteColors.png";
-    _struct->error_code     = 0;
-    _struct->png_fileptr    = NULL;
-};
-
-struct _PNGData {
-    png_structp png_ptr;
-    png_infop info_ptr;
-    char* temp_png_path ;
-    byte* pixel_red     ;
-    byte* pixel_green   ;
-    byte* pixel_blue    ;
-    byte* pixel_alpha   ;
-    int m_width    ;  
-    int m_height   ;
-    int color_type ;
-    int num_channel;
-    int num_pixel  ;
-
-};
-
-void Construct_PNGData( struct _PNGData* _struct ){
-    _struct->temp_png_path = TEMP_PNG_FILE ;
-    _struct->pixel_red     = NULL ;
-    _struct->pixel_green   = NULL ;
-    _struct->pixel_blue    = NULL ;
-    _struct->pixel_alpha   = NULL ;
-    _struct->m_width       = 0 ;
-    _struct->m_height      = 0 ;
-    _struct->color_type    = 0 ;
-    _struct->num_channel   = 0 ;
-    _struct->num_pixel     = 0 ;
-}
-
-
+/*
 bool UnzipPNGFile( struct _ResPackArchive* _archive ){
 
     if( access( _archive->zip_path , F_OK) != -1){
@@ -189,26 +119,60 @@ bool UnzipPNGFile( struct _ResPackArchive* _archive ){
     return OK;
 
 }
-
+*/
 void ReadPNG(struct _PNGData* png) {
 
-    FILE* temp_png_file_ptr = fopen(TEMP_PNG_FILE, "rb");
-    png_structp png_ptr     = png_create_read_struct( PNG_LIBPNG_VER_STRING , 0 , 0 , 0 );
-    png_infop info_ptr      = png_create_info_struct( png->png_ptr );
-    setjmp( png_jmpbuf( png->png_ptr ) );
+    png_structp png_ptr = NULL;
+    png_infop info_ptr = NULL;
+    FILE* temp_png_file_ptr = fopen(PATH_TO_UNZIP, "rb");
 
-    png_init_io( png->png_ptr, temp_png_file_ptr );
-    png_read_png( png->png_ptr, png->info_ptr , PNG_TRANSFORM_EXPAND , 0 );
+    png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
+    if( png_ptr == NULL )
+        QUITMSG( "Failed to prepare png_ptr.");
 
-    png->m_width     = png_get_image_width( png->png_ptr , png->info_ptr);
-    png->m_height    = png_get_image_height( png->png_ptr , png->info_ptr);
-    png->color_type  = png_get_color_type( png->png_ptr , png->info_ptr);
-    png->num_channel = png_get_channels( png->png_ptr , png->info_ptr );
+    info_ptr = png_create_info_struct( png_ptr );
+    if (!info_ptr){
+        png_destroy_read_struct(&png_ptr,NULL,NULL);
+        QUITMSG( "Failed to prepare info_ptr.");
+    }
+
+    int png_error_code = setjmp( png_jmpbuf( png_ptr ) );
+    if( png_error_code ){
+        char errmsg[64] ;
+        sprintf( errmsg , "[PNG I/O]Have problems decoding PNG.[libpng]Error Code = %i", png_error_code );
+        QUITMSG(errmsg);
+    }
+
+    png_init_io( png_ptr, temp_png_file_ptr );
+    png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
+
+    png_get_IHDR( png_ptr , info_ptr , &png->m_width , &png->m_height,
+                  &png->bit_depth , &png->color_type , NULL , NULL, NULL );
+
+    png->num_channel = png_get_channels( png_ptr , info_ptr );
     png->num_pixel   = png->m_height * png->m_width ;
 
+    if (png->color_type==PNG_COLOR_TYPE_PALETTE)
+        png_set_palette_to_rgb(png_ptr);            //要求转换索引颜色到RGB
+    if (png->color_type==PNG_COLOR_TYPE_GRAY && png->bit_depth<8)
+        png_set_expand_gray_1_2_4_to_8(png_ptr);    //要求位深度强制8bit
+    if (png_get_valid(png_ptr,info_ptr,PNG_INFO_tRNS))
+        png_set_tRNS_to_alpha(png_ptr);
+    if (png->color_type == PNG_COLOR_TYPE_GRAY || png->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
+        png_set_gray_to_rgb(png_ptr);               //灰度必须转换成RGB
+    if (png->bit_depth==16){
 
-    png_bytep* row_pointers = png_get_rows(png->png_ptr, png->info_ptr);
+        png_set_strip_16(png_ptr); //要求位深度强制8bit
+    }
+        
+    png->row_pointers = (png_bytep *)malloc(sizeof(png_bytep) * png->m_height);
 
+    for (int y = 0; y < png->m_height; y++) {
+        png->row_pointers[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, png_info));
+    }
+    png_read_image(png, png->row_pointers);
+
+    /*
     png->pixel_red       = (byte*)malloc(png->num_pixel);
 	png->pixel_green     = (byte*)malloc(png->num_pixel);
 	png->pixel_blue      = (byte*)malloc(png->num_pixel);
@@ -237,10 +201,8 @@ void ReadPNG(struct _PNGData* png) {
     else{
         fprintf( stderr , "Wrong number of colour channels:%i",png->num_channel);
     }
-
-
-    png_destroy_read_struct(&png_ptr, &info_ptr, 0);
-
+    */
+    png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(temp_png_file_ptr);
 
     return OK;
@@ -263,7 +225,6 @@ bool FileExistWarning( const char* path){
             printf("Invalid input.File overwrite cancelled.");
             return false;
     }
-
 }
 
 bool ExportJSON( struct _PNGData* png , const char* json_path ){
@@ -274,14 +235,12 @@ bool ExportJSON( struct _PNGData* png , const char* json_path ){
        exit(CreateFile);
    }
    fputs("[",json_ptr);
-   for( int loop=0 ; loop <= png->num_pixel ; loop ++) {
+   for( int loop=0 ; loop <= (png->num_pixel*3) ; loop +=3 ) {
         byte is_successful = fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
-                            png->pixel_red[loop],
-                            png->pixel_blue[loop],
-                            png->pixel_green[loop],
-                            png->pixel_alpha[loop]
-                            ) 
-                        , json_ptr);
+                            **(png->row_pointers+loop),
+                            **(png->row_pointers+loop+1),
+                            **(png->row_pointers+loop+2),
+                            DEFAULT_ALPHA) , json_ptr);
         if( is_successful ==  EOF ){
             fprintf( stderr , "Failed to write JSON file!");
             fclose( json_ptr );
@@ -292,10 +251,10 @@ bool ExportJSON( struct _PNGData* png , const char* json_path ){
    fclose( json_ptr );
    
 }
+/*
+bool RandomColourOrder( struct _PNGData* png ){
 
-bool RandomColourSequence( struct _PNGData* png ){
-
-    for( int step = 0 ; step < NUM_RAMDOM_CHANGES ; ++step ){
+    for( int step = 0 ; step < png->num_pixel ; ++step ){
         byte temp_red , temp_blue , temp_green , temp_alpha ;
         
         int swap_x = rand()%(png->num_pixel) , swap_y = rand()%(png->num_pixel);
@@ -316,15 +275,13 @@ bool RandomColourSequence( struct _PNGData* png ){
 
     }
 }
-
+*/
 void PutHelpInfo(){
 
 }
 
 
-bool ArgcProcess( struct _PNGData*  png , struct _ResPackArchive* respack , const int* argn , const char* argc[] ){
 
-}
 
 int main( int argn , char* argc[]  ){
 
