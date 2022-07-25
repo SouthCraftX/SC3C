@@ -4,6 +4,7 @@
 #include <io.h>
 #include <png.h>
 #include <time.h>
+#include <stdbool.h>
 
 #include "defines.h"
 #include "construct_func.h"
@@ -144,7 +145,7 @@ void ReadPNG(struct _PNGData* png) {
     }
 
     png_init_io( png_ptr, temp_png_file_ptr );
-    png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
+    //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
 
     png_get_IHDR( png_ptr , info_ptr , &png->m_width , &png->m_height,
                   &png->bit_depth , &png->color_type , NULL , NULL, NULL );
@@ -209,23 +210,7 @@ void ReadPNG(struct _PNGData* png) {
 
 }
 
-bool FileExistWarning( const char* path){
-    printf("Warning: %s is already exist.Do you want to overwrite the file?(y/n):");
-    char input;
-    fflush ( stdin );
-    scanf("%c",input);
-    fflush ( stdin );
 
-    switch( input ){
-        case 'y':
-        case 'Y': return true;
-        case 'n':
-        case 'N': return false;
-        default: 
-            printf("Invalid input.File overwrite cancelled.");
-            return false;
-    }
-}
 
 bool ExportJSON( struct _PNGData* png , const char* json_path ){
 
