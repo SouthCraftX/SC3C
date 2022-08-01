@@ -12,7 +12,8 @@
 #define INFO_UNZ_CTFINFO   ("[ZipArchive I/O]获取资源包内当前文件信息成功\n")
 #define INFO_UNZ_CTFOPEN   ("[ZipArchive I/O]成功打开资源包内包含颜色配置信息的PNG文件\n")
 
-#define ERRMSG_ARG_INVAILD ("[ArgProcessor]%s:无此参数！",argv[now_argc])
+#define ERRMSG_OWW_INPUT   ("输入错误！已取消文件文件覆盖！")
+#define ERRMSG_ARG_INVAILD ("[ArgProcessor]%s:无此参数！")
 #define ERRMSG_ARG_IPATH   ("[ArgProcessor]%s:文件不存在！")
 #define ERRMSG_ARG_PMDEN   ("[ArgProcessor]%s:拒绝访问！")
 
@@ -21,8 +22,10 @@
 #define ERRMSG_UNZ_CTFINFO ("[ZipArchive I/O]获取资源包内当前文件信息失败！\n")
 #define ERRMSG_UNZ_CTFOPEN ("[ZipArchive I/O]无法打开资源包内包含颜色配置信息的PNG文件！\n")
 #define ERRMSG_UNZ_PNGTL   ("[ZipArchive I/O]包含颜色配置信息的PNG文件过大！其必须小于1MB！\n")
-#define ERRMSG_UNZ_TMPCR   ("[File I/O无法创建临时文件！请重新指定临时文件路径！\n")
-#define ERRMSG_UNZ_TMPFW   ("[File I/O无法写入临时文件！\n")
+#define ERRMSG_UNZ_TMPCR   ("[File I/O]无法创建临时文件！请重新指定临时文件路径！\n")
+#define ERRMSG_UNZ_TMPFW   ("[File I/O]无法写入临时文件！\n")
+
+#define ERRMSG_PNG_INITDEC ("[PNG Decoder]初始化ONG解码器失败！\n")
 
 const char* banner_text ="SC3C的帮助页面\n"
                          "软件作者: South Craft\n"
@@ -39,16 +42,21 @@ const char* help_text =  "使用方法: sc3c.exe -i <ZIP_PATH> -o <JSON_PATH> [O
                          " -e\t转换时仅显示错误信息\n";
 #else
 
-#define ERRMSG_ARG_INVAILD ("[ArgProcessor]%s:No such a argument!",argv[argc_now])
+#define ERRMSG_ARG_INVAILD ("[ArgProcessor]%s:No such a argument!")
 #define ERRMSG_ARG_IPATH   ("[ArgProcessor]%s:No such a file or directory.")
 #define ERRMSG_ARG_PMDEN   ("[ArgProcessor]%s:Permission denied.")
-#define ERRMSG_UNZ_OPENZIP "[ZipArchive I/O]Failed to open the zip file."
-#define ERRMSG_UNZ_GBINFO  "[ZipArchive I/O]Failed to get golbal info of the zip file."
-#define ERRMSG_UNZ_CTFINFO "[ZipArchive I/O]Failed to get PNG file info."
-#define ERRMSG_UNZ_CTFOPEN "[ZipArchive I/O]Failed to open noteColors.png in the zip file."
-#define ERRMSG_UNZ_PNGTL   "[ZipArchive I/O]PNG file is too large."
-#define ERRMSG_UNZ_TMPCR   "[File I/O]Failed to create temporary file."
-#define ERRMSG_UNZ_TMPFW   "[File I/O]Failed to write temporary file.Please secifies anothor "
+
+#define ERRMSG_OWW_INPUT   ("Invalid input!File overwrite cancelled.")
+
+#define ERRMSG_PNG_INITDEC ("[PNG Decoder]Failed to initialise PNG decoder.\n")
+
+#define ERRMSG_UNZ_OPENZIP ("[ZipArchive I/O]Failed to open the zip file.")
+#define ERRMSG_UNZ_GBINFO  ("[ZipArchive I/O]Failed to get golbal info of the zip file.")
+#define ERRMSG_UNZ_CTFINFO ("[ZipArchive I/O]Failed to get PNG file info.")
+#define ERRMSG_UNZ_CTFOPEN ("[ZipArchive I/O]Failed to open noteColors.png in the zip file.")
+#define ERRMSG_UNZ_PNGTL   ("[ZipArchive I/O]PNG file is too large.")
+#define ERRMSG_UNZ_TMPCR   ("[File I/O]Failed to create temporary file.")
+#define ERRMSG_UNZ_TMPFW   ("[File I/O]Failed to write temporary file.Please secifies anothor ")
 
 const char* banner_text ="Help Page of SC3C\n"
                          "Author: South Craft\n"

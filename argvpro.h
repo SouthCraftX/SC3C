@@ -16,14 +16,14 @@ void test_arg( struct CovertOption* opt){
     }
     if((!access(opt->output_path,F_OK))&&(!opt->force_overwriting)){
         if(!file_exist_warning(opt->output_path))
-            exit();
+            exit(0);
     }
     if((!access(opt->temp_path,F_OK))&&(!opt->force_overwriting)){
         if(!file_exist_warning(opt->temp_path))
-            exit();
+            exit(0);
     }
     if(opt->temp_path == NULL){
-        opt->temp_path = tmpnam();
+        opt->temp_path = tmpnam(NULL);
     }
 
 }
@@ -69,7 +69,7 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
             opt->print_error_msg_only = true;
             continue;
         }
-        put_err_msg( ERRMSG_ARG_INVAILD );
+        put_err_msg( ERRMSG_ARG_INVAILD , ,argv[now_argc] );
     }
     
 }

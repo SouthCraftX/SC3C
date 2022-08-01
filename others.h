@@ -33,7 +33,7 @@ bool file_exist_warning( ccstring path){
         case 'n':
         case 'N': return false;
         default: 
-            printf("Invalid input.File overwrite cancelled.");
+            puts("Invalid input.File overwrite cancelled.");
             return false;
     }
 }

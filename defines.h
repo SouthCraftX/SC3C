@@ -41,16 +41,13 @@ struct CovertOption {
     bool  print_error_msg_only : 1;
     bool  force_overwriting : 1;
     bool  ramdom_color : 1;
-}
+};
 
 
-struct _PNGData {
+struct PNGData {
     byte** row_ptr ;
     int bit_depth  ;
-    int m_width    ;  
-    int m_height   ;
     int color_type ;
-    int num_channel;
     int num_pixel  ;
 };
 
