@@ -64,6 +64,7 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
                     break;
                 case 'e':
                     opt->print_error_msg_only = true;
+                    ++now_argc;
                     break;
                 default:
                     goto GOTOLAB_INVAILD_ARG;
