@@ -40,7 +40,7 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
 
     while ( now_argc < argc ){
 
-        if( argv[now_argc][0] == '-'){
+        if( (argv[now_argc][0] == '-' )&&(strlen(argv[now_argc]==2))){
             switch( argv[now_argc][1] ){
                 case 'i':
                     opt->input_path = argv[now_argc+1];
@@ -72,6 +72,7 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
         else{
             GOTOLAB_INVAILD_ARG:
                  put_err_msg( ERRMSG_ARG_INVAILD ,argv[now_argc] );
+                 abort();
         }
 /*
         if( !strcmp( argv[now_argc] , "-i" )){
