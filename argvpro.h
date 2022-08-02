@@ -39,6 +39,41 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
     opt->force_overwriting      = false ;
 
     while ( now_argc < argc ){
+
+        if( argv[now_argc][0] == '-'){
+            switch( argv[now_argc][1] ){
+                case 'i':
+                    opt->input_path = argv[now_argc+1];
+                    now_argc+=2;
+                    break;
+                case 'o':
+                    opt->output_path = argv[now_argc+1];
+                    now_argc+=2;
+                    break;
+                case 'y':
+                    opt->force_overwriting = true ;
+                    ++now_argc;
+                    break;
+                case 't':
+                    opt->output_path = argv[now_argc+1];
+                    now_argc+=2;
+                    break;
+                case 'r':
+                     opt->ramdom_color = true;
+                    ++now_argc;
+                    break;
+                case 'e':
+                    opt->print_error_msg_only = true;
+                    break;
+                default:
+                    goto GOTOLAB_INVAILD_ARG;
+            }
+        }
+        else{
+            GOTOLAB_INVAILD_ARG:
+                 put_err_msg( ERRMSG_ARG_INVAILD ,argv[now_argc] );
+        }
+/*
         if( !strcmp( argv[now_argc] , "-i" )){
             opt->input_path = argv[now_argc+1];
             now_argc+=2;
@@ -68,7 +103,9 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
             opt->print_error_msg_only = true;
             continue;
         }
+
         put_err_msg( ERRMSG_ARG_INVAILD ,argv[now_argc] );
     }
+*/
     test_arg( opt );
 }
