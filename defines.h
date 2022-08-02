@@ -1,7 +1,7 @@
 #ifndef SC3CHF_DEFS
 #define SC3CHF_DEFS
 
-#include <stdio.h>
+#include <stdbool.h>
 
 #define BUFFER_SIZE (8192)
 #define MAX_PATH_LEN (260) 

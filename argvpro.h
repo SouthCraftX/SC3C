@@ -25,7 +25,6 @@ void test_arg( struct CovertOption* opt){
     if(opt->temp_path == NULL){
         opt->temp_path = tmpnam(NULL);
     }
-
 }
 
 
@@ -69,7 +68,7 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
             opt->print_error_msg_only = true;
             continue;
         }
-        put_err_msg( ERRMSG_ARG_INVAILD , ,argv[now_argc] );
+        put_err_msg( ERRMSG_ARG_INVAILD ,argv[now_argc] );
     }
-    
+    test_arg( opt );
 }

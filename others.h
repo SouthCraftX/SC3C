@@ -13,7 +13,7 @@ void put_err_msg( ccstring formated_msg  , ...){
     fprintf( stderr , formated_msg , arg);
 }
 
-void put_info_msg( const CovertOption* opt , ccstring formated_msg , ... ){
+void put_info_msg( const struct CovertOption* opt , ccstring formated_msg , ... ){
     va_list arg;
     if(!opt->print_error_msg_only)
         printf( formated_msg , arg );
