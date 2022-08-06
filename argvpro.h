@@ -5,7 +5,13 @@
 #include "lang.h"
 
 void test_arg( struct CovertOption* opt){
-
+/*
+    access(path,F_OK)
+    Detect the existence of a file.
+    0  = File exists
+    !0 = File doesn't exist
+    
+*/
     if(access(opt->input_path,F_OK)){
         put_err_msg(ERRMSG_ARG_IPATH,opt->input_path);
         abort();
@@ -40,28 +46,28 @@ int arg_processor( struct CovertOption* opt , const long argc ,  cstring* argv )
 
     while ( now_argc < argc ){
 
-        if( (argv[now_argc][0] == '-' )&&(strlen(argv[now_argc]==2))){
+        if( (argv[now_argc][0] == '-' )&&(strlen(argv[now_argc]==2)) ){
             switch( argv[now_argc][1] ){
                 case 'i':
                     opt->input_path = argv[now_argc+1];
                     now_argc+=2;
-                    break;
+                    continue;
                 case 'o':
                     opt->output_path = argv[now_argc+1];
                     now_argc+=2;
-                    break;
+                    continue;
                 case 'y':
                     opt->force_overwriting = true ;
                     ++now_argc;
-                    break;
+                    continue;
                 case 't':
                     opt->output_path = argv[now_argc+1];
                     now_argc+=2;
-                    break;
+                    continue;
                 case 'r':
-                     opt->ramdom_color = true;
+                    opt->ramdom_color = true;
                     ++now_argc;
-                    break;
+                    continue;
                 case 'e':
                     opt->print_error_msg_only = true;
                     ++now_argc;

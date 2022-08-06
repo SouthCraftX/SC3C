@@ -11,14 +11,14 @@
 //#define false (0)
 
 //typedef int bool;
-typedef unsigned char byte;
-typedef unsigned int uint;
-typedef unsigned long ulong;
-typedef unsigned short ushort;
-typedef unsigned long long ullong;
-typedef long long llong;
-typedef char* cstring;
-typedef const char* ccstring;
+typedef unsigned char       byte;
+typedef unsigned int        uint;
+typedef unsigned long       ulong;
+typedef unsigned short      ushort;
+typedef unsigned long long  ullong;
+typedef long long           llong;
+typedef char*               cstring;
+typedef const char*         ccstring;
 
 
 enum StatusCode{
@@ -41,6 +41,7 @@ struct CovertOption {
     bool  print_error_msg_only : 1;
     bool  force_overwriting : 1;
     bool  ramdom_color : 1;
+    bool  no_cleaning : 1;
 };
 
 
