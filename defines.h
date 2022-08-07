@@ -47,9 +47,8 @@ struct CovertOption {
 
 struct PNGData {
     byte** row_ptr ;
-    int bit_depth  ;
-    int color_type ;
-    int num_pixel  ;
+    int height;
+    int height;
 };
 
 #endif
