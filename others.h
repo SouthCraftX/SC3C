@@ -1,12 +1,24 @@
 #ifndef SC3CHF_OTHERS
 #define SC3CHF_OTHERS
+
 #include "defines.h"
+#include "lang.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
 
+#ifdef _WIN32
 #include <io.h>
+#else
+#include <unistd.h>
+#endif
+
+void do_help(){
+    puts(help_text);
+}
+
+
 //Print a error message.
 void put_err_msg( ccstring formated_msg  , ...){
     va_list arg;
@@ -14,19 +26,19 @@ void put_err_msg( ccstring formated_msg  , ...){
 }
 
 
-void put_info_msg( const struct CovertOption* opt , 
+void put_info_msg( const bool if_put  ,
                    ccstring formated_msg , ... ){
     va_list arg;
-    if(!opt->print_error_msg_only)
+    if(if_put)
         printf( formated_msg , arg );
     return;
 }
 
 bool file_exist_warning( ccstring path){
-    printf("Warning: %s is already exist.Override?(y/n):");
+    printf("Warning: %s is already exist.Override?(y/n):",path);
     char input;
     fflush ( stdin );
-    scanf("%c",input);
+    scanf("%c",&input);
     fflush ( stdin );
 
     switch( input ){
@@ -34,7 +46,7 @@ bool file_exist_warning( ccstring path){
         case 'Y': return true;
         case 'n':
         case 'N': return false;
-        default: 
+        default:
             puts("Invalid input.File overwrite cancelled.");
             return false;
     }

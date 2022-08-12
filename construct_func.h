@@ -1,6 +1,6 @@
 #ifndef SC3CHF_CSTRUCTFUC
 #define SC3CHF_CSTRUCTFUC
-
+/*
 void Construct_ResPackArchive( struct _ResPackArchive* _struct , char* zip_path ){
     _struct->archive        = NULL;
     _struct->zip_path        = zip_path;
@@ -21,5 +21,5 @@ void Construct_PNGData( struct _PNGData* _struct ){
     _struct->num_channel   = 0 ;
     _struct->num_pixel     = 0 ;
 }
-
+*/
 #endif
