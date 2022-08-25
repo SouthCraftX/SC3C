@@ -17,7 +17,7 @@
 #include "construct_func.h"
 #include "png_unzipper.h"
 
-void png_decoder( const struct CovertOption* opt ,
+void png_decoder( const struct ConvertOption* opt ,
                   struct PNGData* png ) {
 
     png_structp     png_ptr             = NULL;
@@ -84,7 +84,7 @@ void png_decoder( const struct CovertOption* opt ,
 
 }
 
-bool export_to_json(  const struct CovertOption* opt,
+bool export_to_json(  const struct ConvertOption* opt,
                       struct PNGData* png){
 
    FILE* json_ptr = fopen( opt->output_path , "r" );
@@ -95,13 +95,13 @@ bool export_to_json(  const struct CovertOption* opt,
    fputs("[",json_ptr);
 
    //ugly
-   for( long hei = 0 ; wid < png->height ; ++hei ) {
-	for( long wid = 0 ; wid < png->width ; ++wid ){
-        fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
-                png->row_ptr[hei][wid*4],
-                png->row_ptr[hei][wid*4+1],
-                png->row_ptr[hei][wid*4+2],
-                png->row_ptr[hei][wid*4+3],) , json_ptr);
+   for( long hei = 0 ; hei < png->height ; ++hei ) {
+        for( long wid = 0 ; wid < png->width ; ++wid ){
+            fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
+                    png->row_ptr[hei][wid*4],
+                    png->row_ptr[hei][wid*4+1],
+                    png->row_ptr[hei][wid*4+2],
+                    png->row_ptr[hei][wid*4+3]) , json_ptr);
         //if( is_successful ==  EOF ){
             //fprintf( stderr , "Failed to write JSON file!");
             //fclose( json_ptr );
@@ -110,7 +110,6 @@ bool export_to_json(  const struct CovertOption* opt,
    }
    fputs( "\b]" , json_ptr );
    fclose( json_ptr );
-
 }
 /*
 bool ramdom_color_order( struct PNGData* png ){
