@@ -72,7 +72,7 @@ void png_decoder( const struct ConvertOption* opt ,
     png->row_ptr = (png_bytep *)malloc(sizeof(png_bytep) * height);
 
     for (int y = 0; y < height; y++) {
-        png->row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, png_info));
+        png->row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, info_ptr));
     }//这样写有个弊端：1-没有检查是否分配成功（但如果在for循环里检查会大幅度降低性能）2-容易加剧内存碎片化 。上述问题将在后续版本用内存池解决。
     png_read_image(png, png->row_ptr);
 
@@ -111,31 +111,6 @@ bool export_to_json(  const struct ConvertOption* opt,
    fputs( "\b]" , json_ptr );
    fclose( json_ptr );
 }
-/*
-bool ramdom_color_order( struct PNGData* png ){
-
-    for( int step = 0 ; step < png->num_pixel ; ++step ){
-        byte temp_red , temp_blue , temp_green , temp_alpha ;
-
-        int swap_x = rand()%(png->num_pixel) , swap_y = rand()%(png->num_pixel);
-        temp_red   = png->pixel_red  [ swap_y ];
-        temp_blue  = png->pixel_blue [ swap_y ];
-        temp_green = png->pixel_green[ swap_y ];
-        temp_alpha = png->pixel_alpha[ swap_y ];
-
-        png->pixel_red  [ swap_y ] =   png->pixel_red  [ swap_x ] ;
-        png->pixel_blue [ swap_y ] =   png->pixel_blue [ swap_x ] ;
-        png->pixel_green[ swap_y ] =   png->pixel_green[ swap_x ] ;
-        png->pixel_alpha[ swap_y ] =   png->pixel_alpha[ swap_x ] ;
-
-        png->pixel_red  [ swap_x ] = temp_red  ;
-        png->pixel_blue [ swap_x ] = temp_blue ;
-        png->pixel_green[ swap_x ] = temp_green;
-        png->pixel_alpha[ swap_x ] = temp_alpha;
-
-    }
-}
-*/
 
 int main( int argn , char* argc[]  ){
 
