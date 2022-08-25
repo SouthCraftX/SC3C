@@ -26,32 +26,30 @@ void png_decoder( const struct ConvertOption* opt ,
 
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
     if( png_ptr == NULL ){
-        fprintf(stderr, "Failed to initialise PNG decoder");
+        fprintf(stderr, ERRMSG_PNG_INITDEC);
         abort();
     }
 
     info_ptr = png_create_info_struct( png_ptr );
     if (!info_ptr){
         png_destroy_read_struct(&png_ptr,NULL,NULL);
-        fprintf( stderr , "Failed to initialise PNG decoder");
+        fprintf( stderr , ERRMSG_PNG_INITDEC );
         abort();
     }
     int png_error_code = setjmp( png_jmpbuf( png_ptr ) );
     if( png_error_code ){
         fprintf( stderr, "[PNG I/O]Have problems decoding PNG. Error Code = %i", png_error_code);
-	abort();
+	    abort();
     }
 
     png_init_io( png_ptr, temp_png_file_ptr );
     //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
 
-    ulong width,height;
     long bit_depth,color_type;
     png_get_IHDR( png_ptr , info_ptr , &png->width , &png->height,
                   &bit_depth , &color_type , NULL , NULL, NULL );
 
     //png->num_channel = png_get_channels( png_ptr , info_ptr );
-
     //将像素格式转换为RGBA
     if (bit_depth==16)
         png_set_strip_16(png_ptr); //要求位深度强制8bit
@@ -69,9 +67,9 @@ void png_decoder( const struct ConvertOption* opt ,
     //更新图像信息
     png_read_update_info(png_ptr, info_ptr);
 
-    png->row_ptr = (png_bytep *)malloc(sizeof(png_bytep) * height);
+    png->row_ptr = (png_bytep *)malloc(sizeof(png_bytep) * png->height);
 
-    for (int y = 0; y < height; y++) {
+    for (int y = 0; y < png->height; y++) {
         png->row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, info_ptr));
     }//这样写有个弊端：1-没有检查是否分配成功（但如果在for循环里检查会大幅度降低性能）2-容易加剧内存碎片化 。上述问题将在后续版本用内存池解决。
     png_read_image(png, png->row_ptr);

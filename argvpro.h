@@ -73,7 +73,7 @@ void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv 
     opt->output_path            = NULL  ;
     opt->print_error_msg_only   = false ;
     opt->ramdom_color           = false ;
-    opt->force_overwriting      = false ;
+    opt->force_overriding       = false ;
 
 
     if(argc==1){
