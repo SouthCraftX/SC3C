@@ -17,20 +17,20 @@ void test_arg( struct CovertOption* opt){
 
 */
     if(!opt->input_path){
-        put_err_msg(ERRMSG_ARG_IUNDEF);
+        fprintf( stderr , ERRMSG_ARG_IUNDEF);
         abort();
     }
      if(!opt->output_path){
-        put_err_msg(ERRMSG_ARG_OUNDEF);
+        fprintf( stderr , ERRMSG_ARG_OUNDEF);
         abort();
     }
 
     if(access(opt->input_path,F_OK)){
-        put_err_msg(ERRMSG_ARG_IPATH,opt->input_path);
+        fprintf( stderr , ERRMSG_ARG_IPATH,opt->input_path);
         abort();
     }
     if(access(opt->input_path,R_OK)){
-        put_err_msg(ERRMSG_ARG_PMDEN,opt->input_path);
+        fprintf( stderr , ERRMSG_ARG_PMDEN,opt->input_path);
         abort();
     }
     if((!access(opt->output_path,F_OK))&&(!opt->force_overwriting)){
@@ -52,15 +52,16 @@ void test_arg( struct CovertOption* opt){
     src (aka source)
     dst (aka destination)
 */
-void arg_set_path( cstring src , cstring dst , cstring arg,
+void arg_set_path( cstring* src , cstring* dst , cstring arg,
                     int* now_argc_ptr , const int* argc_ptr)
 {
     if((*now_argc_ptr)+1 == *(argc_ptr)){
-        put_err_msg(ERRMSG_ARG_LOSS,arg);
+        fprintf( stderr , ERRMSG_ARG_LOSS , arg);
         abort();
     }
-    dst = src;
-    (*now_argc_ptr)++;
+
+     *dst = *src;
+    (*now_argc_ptr)+=2;
 }
 
 
@@ -85,38 +86,42 @@ void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv 
         if( (argv[now_argc][0] == '-' )&&(strlen(argv[now_argc])==2) ){
             switch( argv[now_argc][1] ){
                 case 'i':
-                    arg_set_path(argv[now_argc+1],opt->input_path,"-i",&now_argc,&argc);
-                    continue;
+                    arg_set_path(&argv[now_argc+1],&opt->input_path,"-i",&now_argc,&argc);
+                    break;
                 case 'o':
-                    arg_set_path(argv[now_argc+1],opt->output_path,"-o",&now_argc,&argc);
-                    continue;
+                    arg_set_path(&argv[now_argc+1],&opt->output_path,"-o",&now_argc,&argc);
+                    break;
                 case 'y':
                     opt->force_overwriting = true ;
                     ++now_argc;
-                    continue;
+                    break;
                 case 't':
-                    arg_set_path(argv[now_argc+1],opt->temp_path,"-t",&now_argc,&argc);
-                    continue;
+                    arg_set_path(&argv[now_argc+1],&opt->temp_path,"-t",&now_argc,&argc);
+                    break;
                 case 'r':
                     opt->ramdom_color = true;
                     ++now_argc;
-                    continue;
+                    break;
                 case 'e':
                     opt->print_error_msg_only = true;
                     ++now_argc;
-                    continue;
+                    break;
                 case 'h':
                     do_help();
-                    continue;
+                    ++now_argc;
+                    break;
                 default:
                     goto GOTOLAB_INVAILD_ARG;
             }
+            continue;
         }
         else{
-            GOTOLAB_INVAILD_ARG:
-                 put_err_msg( ERRMSG_ARG_INVAILD ,argv[now_argc] );
-                 abort();
+            goto GOTOLAB_INVAILD_ARG;
         }
+        GOTOLAB_INVAILD_ARG:
+             fprintf( stderr , ERRMSG_ARG_INVAILD ,argv[now_argc] );
+             abort();
+
     }
 /*
         if( !strcmp( argv[now_argc] , "-i" )){

@@ -18,13 +18,18 @@ void do_help(){
     puts(help_text);
 }
 
+#define put_err_msg( format , ...) ( \
+            fprintf(stderr, format , __VA_ARGS__) \
+        )
 
+
+/*
 //Print a error message.
 void put_err_msg( ccstring formated_msg  , ...){
     va_list arg;
     fprintf( stderr , formated_msg , arg);
 }
-
+*/
 
 void put_info_msg( const bool if_put  ,
                    ccstring formated_msg , ... ){

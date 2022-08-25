@@ -8,6 +8,7 @@
 #include <unistd.h>
 #endif
 
+
 #include <png.h>
 #include <time.h>
 #include <stdbool.h>
@@ -16,7 +17,8 @@
 #include "construct_func.h"
 #include "png_unzipper.h"
 
-void png_decoder( const struct CovertOption* opt , struct PNGData* png) {
+void png_decoder( const struct CovertOption* opt ,
+                  struct PNGData* png ) {
 
     png_structp     png_ptr             = NULL;
     png_infop       info_ptr            = NULL;
@@ -24,19 +26,20 @@ void png_decoder( const struct CovertOption* opt , struct PNGData* png) {
 
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
     if( png_ptr == NULL ){
-        put_err_msg( "Failed to initialise PNG decoder");
+        fprintf(stderr, "Failed to initialise PNG decoder");
         abort();
     }
 
     info_ptr = png_create_info_struct( png_ptr );
     if (!info_ptr){
         png_destroy_read_struct(&png_ptr,NULL,NULL);
-        put_err_msg( "Failed to initialise PNG decoder");
+        fprintf( stderr , "Failed to initialise PNG decoder");
         abort();
     }
     int png_error_code = setjmp( png_jmpbuf( png_ptr ) );
     if( png_error_code ){
-        put_err_msg( "[PNG I/O]Have problems decoding PNG. Error Code = %i", png_error_code);
+        fprintf( stderr, "[PNG I/O]Have problems decoding PNG. Error Code = %i", png_error_code);
+	abort();
     }
 
     png_init_io( png_ptr, temp_png_file_ptr );
@@ -68,10 +71,11 @@ void png_decoder( const struct CovertOption* opt , struct PNGData* png) {
 
     png->row_ptr = (png_bytep *)malloc(sizeof(png_bytep) * height);
 
-    for (int hei = 0; hei < height; y++) {
-        png->row_ptr[hei] = (png_byte *)malloc(png_get_rowbytes(png_ptr, png_info));
+    for (int y = 0; y < height; y++) {
+        png->row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, png_info));
     }//这样写有个弊端：1-没有检查是否分配成功（但如果在for循环里检查会大幅度降低性能）2-容易加剧内存碎片化 。上述问题将在后续版本用内存池解决。
     png_read_image(png, png->row_ptr);
+
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose(temp_png_file_ptr);
@@ -80,20 +84,19 @@ void png_decoder( const struct CovertOption* opt , struct PNGData* png) {
 
 }
 
-
-
-bool export_to_json(  const struct CovertOption* opt ,  const struct PNGData* png ){
+bool export_to_json(  const struct CovertOption* opt,
+                      struct PNGData* png){
 
    FILE* json_ptr = fopen( opt->output_path , "r" );
    if( json_ptr == NULL ){
-       put_err_msg(  "Failed to create JSON file:%s" , opt->output_path);
+       fprintf( stderr , "Failed to create JSON file:%s" , opt->output_path);
        abort();
    }
    fputs("[",json_ptr);
 
    //ugly
-   for( int hei = 0 ; wid < png->height ; ++hei ) {
-	for( int wid = 0 ; wid < png->width ; ++wid ){
+   for( long hei = 0 ; wid < png->height ; ++hei ) {
+	for( long wid = 0 ; wid < png->width ; ++wid ){
         fputs(   ("{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
                 png->row_ptr[hei][wid*4],
                 png->row_ptr[hei][wid*4+1],
@@ -134,20 +137,16 @@ bool ramdom_color_order( struct PNGData* png ){
     }
 }
 */
-void do_help(){
-    puts(help_text);
-}
-
 
 int main( int argn , char* argc[]  ){
 
-    struct ConvertOption opt;
-    struct PNGData 	 png;
+    struct ConvertOption    opt;
+    struct PNGData 	        png;
 
     //懒得单独写一个构造函数了，就直接在main()里写吧
     {
-    	png.row_ptr = NULL;
-    	png.width   = 0;
+	    png.row_ptr = NULL;
+	    png.width   = 0;
     	png.height  = 0;
     }
 
@@ -156,10 +155,10 @@ int main( int argn , char* argc[]  ){
     png_decoder(&opt,&png);
     export_to_json(&opt,&png);
 
-    //同上，懒得写析构函数了。
-    for(int hei = 0 ; hei < png.height ; ++hei){
+    //同上，懒得写一个析构函数了
+    for(int hei = 0; hei < png.height ; ++hei ){
         free(png.row_ptr[hei]);
     }
     free(png.row_ptr);
-
 }
+

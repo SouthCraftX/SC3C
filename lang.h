@@ -21,7 +21,7 @@
 #define ERRMSG_ARG_INVAILD  ("[ArgProcessor]%s:无此参数！\n")
 #define ERRMSG_ARG_IPATH    ("[ArgProcessor]%s:文件不存在！\n")
 #define ERRMSG_ARG_PMDEN    ("[ArgProcessor]%s:拒绝访问！\n")
-#define ERRMSG_ARG_LOSS     ("[Arg Processor]%i:指令不完整!\n")
+#define ERRMSG_ARG_LOSS     ("[Arg Processor]%s:指令不完整!\n")
 #define ERRMSG_ARG_IUNDEF   ("[Arg Processor]未指定源文件!\n")
 #define ERRMSG_ARG_OUNDEF   ("[Arg Processor]未指定输出文件!\n")
 

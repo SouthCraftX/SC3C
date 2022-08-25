@@ -48,7 +48,7 @@ enum StatusCode{
 
 enum StatusCode _scode;
 
-struct CovertOption {
+struct ConvertOption {
     char* input_path;
     char* output_path;
     char* temp_path;
@@ -56,7 +56,6 @@ struct CovertOption {
     bool  force_overwriting : 1;
     bool  ramdom_color : 1;
     bool  no_cleaning : 1;
-    bool  do_help : 1;
 };
 
 
