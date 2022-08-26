@@ -18,12 +18,12 @@
 #define INFO_PNG_ALLOC      ("[PNG解码器]成功为像素数据分配内存\n")
 
 #define ERRMSG_OWW_INPUT    ("输入错误！已取消文件文件覆盖！\n")
-#define ERRMSG_ARG_INVAILD  ("[ArgProcessor]%s:无此参数！\n")
-#define ERRMSG_ARG_IPATH    ("[ArgProcessor]%s:文件不存在！\n")
-#define ERRMSG_ARG_PMDEN    ("[ArgProcessor]%s:拒绝访问！\n")
-#define ERRMSG_ARG_LOSS     ("[Arg Processor]%s:指令不完整!\n")
-#define ERRMSG_ARG_IUNDEF   ("[Arg Processor]未指定源文件!\n")
-#define ERRMSG_ARG_OUNDEF   ("[Arg Processor]未指定输出文件!\n")
+#define ERRMSG_ARG_INVAILD  ("[参数处理器]%s:无此参数！\n")
+#define ERRMSG_ARG_IPATH    ("[参数处理器]%s:文件不存在！\n")
+#define ERRMSG_ARG_PMDEN    ("[参数处理器]%s:拒绝访问！\n")
+#define ERRMSG_ARG_LOSS     ("[参数处理器]%s:指令不完整!\n")
+#define ERRMSG_ARG_IUNDEF   ("[参数处理器]未指定源文件!\n")
+#define ERRMSG_ARG_OUNDEF   ("[参数处理器]未指定输出文件!\n")
 
 #define ERRMSG_UNZ_CLRCACHE ("[ZipArchive I/O]无法清理缓存，请手动删除%s.\n")
 #define ERRMSG_UNZ_OPENZIP  ("[ZipArchive I/O]%s:打开UMP资源包文件失败！\n")
@@ -70,9 +70,9 @@ const char* help_text =  "使用方法: sc3c.exe -i <源文件路径> -o <J输�
 #define INFO_PNG_ALLOC      ("[PNG Decoder]Succeed to allocate memory for pixel data.\n")
 
 
-#define ERRMSG_ARG_INVAILD  ("[ArgProcessor]%s:No such a argument!\n")
-#define ERRMSG_ARG_IPATH    ("[ArgProcessor]%s:No such a file or directory.\n")
-#define ERRMSG_ARG_PMDEN    ("[ArgProcessor]%s:Permission denied.\n")
+#define ERRMSG_ARG_INVAILD  ("[Arg Processor]%s:No such a argument!\n")
+#define ERRMSG_ARG_IPATH    ("[Arg Processor]%s:No such a file or directory.\n")
+#define ERRMSG_ARG_PMDEN    ("[Arg Processor]%s:Permission denied.\n")
 #define ERRMSG_ARG_LOSS     ("[Arg Processor]%i:Argument loss.\n")
 
 #define ERRMSG_OWW_INPUT    ("Invalid input!File overwrite cancelled.\n")
@@ -80,12 +80,12 @@ const char* help_text =  "使用方法: sc3c.exe -i <源文件路径> -o <J输�
 #define ERRMSG_PNG_INITDEC  ("[PNG Decoder]Failed to initialise PNG decoder.\n")
 #define ERRMSG_PNG_DECODE   ("[PNG Decoder]An error occurred while decoding the PNG, error code: %i.\n")
 
-#define ERRMSG_UNZ_CLRCACHE ("[ZipArchive I/O]Failed to clean cache,please delete %s.\n")
-#define ERRMSG_UNZ_OPENZIP  ("[ZipArchive I/O]%s:Failed to open the zip file.\n")
-#define ERRMSG_UNZ_GBINFO   ("[ZipArchive I/O]Failed to get global info of %s\n")
-#define ERRMSG_UNZ_CTFINFO  ("[ZipArchive I/O]Failed to get PNG file info.\n")
-#define ERRMSG_UNZ_CTFOPEN  ("[ZipArchive I/O]Failed to open noteColors.png in the zip file.\n")
-#define ERRMSG_UNZ_PNGTL    ("[ZipArchive I/O]PNG file is too large.\n")
+#define ERRMSG_UNZ_CLRCACHE ("[Zip Archive I/O]Failed to clean cache,please delete %s.\n")
+#define ERRMSG_UNZ_OPENZIP  ("[Zip Archive I/O]%s:Failed to open the zip file.\n")
+#define ERRMSG_UNZ_GBINFO   ("[Zip Archive I/O]Failed to get global info of %s\n")
+#define ERRMSG_UNZ_CTFINFO  ("[Zip Archive I/O]Failed to get PNG file info.\n")
+#define ERRMSG_UNZ_CTFOPEN  ("[Zip Archive I/O]Failed to open noteColors.png in the zip file.\n")
+#define ERRMSG_UNZ_PNGTL    ("[Zip Archive I/O]PNG file is too large.\n")
 #define ERRMSG_UNZ_TMPCR    ("[File I/O]%s:Failed to create temporary file.\n")
 #define ERRMSG_UNZ_TMPFW    ("[File I/O]%s:Failed to write temporary file.Please secifies anothor path. \n")
 

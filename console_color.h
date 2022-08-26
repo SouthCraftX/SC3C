@@ -1,11 +1,15 @@
-#include "defines.h"
+#ifndef SC3CHF_CSC
+#define SC3CHF_CSC
 
+
+#include "defines.h"
+//CSC (aka Console Color)
 #ifdef _WIN32
 
 #include <windows.h>
 
 enum {
-    CSC_BLACK =0,
+    CSC_BLACK ,
     CSC_BLUE,
     CSC_GREEN,
     CSC_ACIDBLUE,
@@ -49,4 +53,6 @@ void set_console_color( flag8 color ){
 void set_console_color( ccstring color ){
     puts(color);
 }
+#endif
+
 #endif

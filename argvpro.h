@@ -8,7 +8,7 @@
 #include "others.h"
 #include "lang.h"
 
-void test_arg( struct CovertOption* opt){
+void test_arg( struct ConvertOption* opt){
 /*
     access(path,F_OK)
     Detect the existence of a file.
@@ -29,19 +29,19 @@ void test_arg( struct CovertOption* opt){
 
     if(access(opt->input_path,F_OK)){
         set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_IPATH,opt->input_path);
+        fprintf( stderr , ERRMSG_ARG_IPATH , opt->input_path);
         abort();
     }
     if(access(opt->input_path,R_OK)){
         set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_PMDEN,opt->input_path);
+        fprintf( stderr , ERRMSG_ARG_PMDEN , opt->input_path);
         abort();
     }
-    if((!access(opt->output_path,F_OK))&&(!opt->force_overwriting)){
+    if((!access(opt->output_path,F_OK))&&(!opt->force_overriding)){
         if(!file_exist_warning(opt->output_path))
             exit(0);
     }
-    if((!access(opt->temp_path,F_OK))&&(!opt->force_overwriting)){
+    if((!access(opt->temp_path,F_OK))&&(!opt->force_overriding)){
         if(!file_exist_warning(opt->temp_path))
             exit(0);
     }
@@ -64,12 +64,11 @@ void arg_set_path( cstring* src , cstring* dst , cstring arg,
         fprintf( stderr , ERRMSG_ARG_LOSS , arg);
         abort();
     }
-
      *dst = *src;
     (*now_argc_ptr)+=2;
 }
 
-void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv ){
+void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv ){
 
     int now_argc                = 1     ;
     opt->temp_path              = NULL  ;
@@ -95,7 +94,7 @@ void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv 
                     arg_set_path(&argv[now_argc+1],&opt->output_path,"-o",&now_argc,&argc);
                     break;
                 case 'y':
-                    opt->force_overwriting = true ;
+                    opt->force_overriding = true ;
                     ++now_argc;
                     break;
                 case 't':
@@ -123,9 +122,9 @@ void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv 
         }
         GOTOLAB_INVAILD_ARG:
             set_console_color(CSC_LIGHTRED);
-             fprintf( stderr , ERRMSG_ARG_INVAILD ,argv[now_argc] );
-             abort();
-             
+            fprintf( stderr , ERRMSG_ARG_INVAILD ,argv[now_argc] );
+            abort();
+
     }
 /*
         if( !strcmp( argv[now_argc] , "-i" )){

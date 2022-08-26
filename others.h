@@ -3,6 +3,7 @@
 
 #include "defines.h"
 #include "lang.h"
+#include "console_color.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -25,24 +26,27 @@ void destroy_pixel_memory( struct PNGData* png ){
     free(png->row_ptr);
 }
 
-#define put_err_msg( format , ...) ( \
-            fprintf(stderr, format , __VA_ARGS__) \
-        )
+//#define put_err_msg( format , ...) ( 
+ //           fprintf(stderr, format , __VA_ARGS__) 
+ //       )
 
 
-/*
 //Print a error message.
 void put_err_msg( ccstring formated_msg  , ...){
     va_list arg;
+    va_start( arg , formated_msg );
     fprintf( stderr , formated_msg , arg);
+    va_end(arg);
 }
-*/
+
 
 void put_info_msg( const bool if_put  ,
                    ccstring formated_msg , ... ){
     va_list arg;
+    va_start( arg , formated_msg );
     if(if_put)
         printf( formated_msg , arg );
+    va_end(arg);
     return;
 }
 

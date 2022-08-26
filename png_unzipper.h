@@ -70,7 +70,7 @@ bool unzipper( const struct ConvertOption* opt ){
                                     sizeof(fname_in_zip) , NULL , 0 , NULL , 0)
            != UNZ_OK)
         {
-            nzClose( zipfile );
+            unzClose( zipfile );
             set_console_color(CSC_LIGHTRED);
             fprintf( stderr , ERRMSG_UNZ_CTFINFO);
             abort();
