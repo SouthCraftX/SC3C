@@ -13,7 +13,9 @@
 #include <time.h>
 #include <stdbool.h>
 
+#include "console_color.h"
 #include "defines.h"
+#include "argvpro.h"
 #include "png_unzipper.h"
 
 void png_decoder( const struct ConvertOption* opt ,
@@ -33,16 +35,12 @@ void png_decoder( const struct ConvertOption* opt ,
     info_ptr = png_create_info_struct( png_ptr );
     if (!info_ptr){
         png_destroy_read_struct(&png_ptr,NULL,NULL);
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_PNG_INITDEC );
-        abort();
+        put_err_msg_abort( stderr , ERRMSG_PNG_INITDEC );
     }
     int png_error_code = setjmp( png_jmpbuf( png_ptr ) );
-    if( png_error_code ){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr, ERRMSG_PNG_DECODE , png_error_code);
-	    abort();
-    }
+    if( png_error_code )
+        put_err_msg_abort( ERRMSG_PNG_DECODE , png_error_code);
+    
 
     png_init_io( png_ptr, temp_png_file_ptr );
     //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
@@ -53,14 +51,14 @@ void png_decoder( const struct ConvertOption* opt ,
 
     //png->num_channel = png_get_channels( png_ptr , info_ptr );
     //将像素格式转换为RGBA
-    if ( bit_depth= = 16 )
+    if ( bit_depth == 16 )
         png_set_strip_16( png_ptr ); //要求位深度强制8bit
     if ( color_type == PNG_COLOR_TYPE_PALETTE )
         png_set_palette_to_rgb( png_ptr );            //要求转换索引颜色到RGB
     if ( color_type == PNG_COLOR_TYPE_GRAY && bit_depth < 8)
         png_set_expand_gray_1_2_4_to_8( png_ptr );    //要求位深度强制8bit
     if ( png_get_valid( png_ptr , info_ptr , PNG_INFO_tRNS ) )
-       png_set_tRNS_to_alpha( png_ptr);
+        png_set_tRNS_to_alpha( png_ptr);
     if( color_type == PNG_COLOR_TYPE_RGB || 
         color_type == PNG_COLOR_TYPE_GRAY || 
         color_type == PNG_COLOR_TYPE_PALETTE )
@@ -89,10 +87,8 @@ void export_to_json(  const struct ConvertOption* opt,
 
     FILE* json_ptr = fopen( opt->output_path , "r" );
     if( json_ptr == NULL ){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_OUT_CREATE , opt->output_path);
         destroy_pixel_memory(png);
-        abort();
+        put_err_msg_abort( stderr , ERRMSG_OUT_CREATE , opt->output_path);
     }
     fputc('[',json_ptr);
 
