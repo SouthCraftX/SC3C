@@ -19,17 +19,17 @@
 #include "defines.h"
 #include "others.h"
 
+/*
+    remove()
+    To remove a file.
+    return :
+        0   = succeed
+        !0  = failed
+*/
 void clean_cache( ccstring cache_path ){
     if(access( cache_path  , 0 )==F_OK){
         if(remove( cache_path )){
-        /*
-            remove()
-            To remove a file.
-            return :
-                0   = succeed
-                !0  = failed
-        */
-            fprintf( stderr , ERRMSG_UNZ_CLRCACHE,cache_path);
+            fprintf( stderr , ERRMSG_UNZ_CLRCACHE , cache_path);
             abort();
         }
     }
@@ -44,17 +44,18 @@ bool unzipper( const struct ConvertOption* opt ){
     unzFile             zipfile         =  NULL       ;
     unz_global_info64   global_info                   ;
     unz_file_info64     file_info                     ;
-    char                fname_in_zip    [MAX_PATH_LEN];
+    char                fname_in_zip    [FILENAME_MAX];
     memset( fname_in_zip , 0 , sizeof(fname_in_zip));
 
     zipfile =  unzOpen64( opt->input_path );
 
     if( zipfile == NULL ) {
-    fprintf( stderr , ERRMSG_UNZ_OPENZIP,opt->input_path);
+        fprintf( stderr , ERRMSG_UNZ_OPENZIP,opt->input_path);
         abort();
     }
 
     if(unzGetGlobalInfo64( zipfile , &global_info ) != UNZ_OK ){
+        unzClose( zipfile );
         fprintf( stderr , ERRMSG_UNZ_GBINFO);
         abort();
     }
@@ -62,8 +63,11 @@ bool unzipper( const struct ConvertOption* opt ){
     int gonext_ret = unzGoToFirstFile( zipfile );
 
     while( gonext_ret == UNZ_OK ){
-        if(unzGetCurrentFileInfo64( zipfile , &file_info , fname_in_zip , sizeof(fname_in_zip) , NULL , 0 , NULL , 0)!= UNZ_OK)
+        if(unzGetCurrentFileInfo64( zipfile , &file_info , fname_in_zip , 
+                                    sizeof(fname_in_zip) , NULL , 0 , NULL , 0)
+           != UNZ_OK)
         {
+            nzClose( zipfile );
             fprintf( stderr , ERRMSG_UNZ_CTFINFO);
             abort();
         }
@@ -71,10 +75,15 @@ bool unzipper( const struct ConvertOption* opt ){
         if(strcmp_ignore_case(fname_in_zip , "noteColors.png"))
             goto GOTOLAB_NEXTFILE;
 
-        if(unzOpenCurrentFile( zipfile ) != UNZ_OK)
+        if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
+            unzClose( zipfile );
             fprintf( stderr , "Failed to open noteColors.png." );
-
+            abort();
+        }
+            
         if( file_info.uncompressed_size > 1024*1024 ){
+            unzCloseCurrentFile( zipfile );
+            unzClose( zipfile );
             fprintf( stderr , ERRMSG_UNZ_PNGTL);
             abort();
         }
@@ -86,7 +95,7 @@ bool unzipper( const struct ConvertOption* opt ){
     memset( io_buffer , 0 , BUFFER_SIZE );
 
     FILE* write_png_fptr;
-#ifdef _WIN32
+#ifdef  __STDC_LIB_EXT1__
     if( fopen_s(&write_png_fptr, PATH_TO_UNZIP , "wb" ) ){
 #else
     write_png_fptr =  fopen(PATH_TO_UNZIP,"wb");
