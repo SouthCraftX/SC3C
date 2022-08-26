@@ -30,7 +30,7 @@
 void clean_cache( ccstring cache_path ){
     if(access( cache_path  , 0 )==F_OK){
         if(remove( cache_path )){
-            fprintf( stderr , ERRMSG_UNZ_CLRCACHE , cache_path);
+            put_err_msg_abort(ERRMSG_UNZ_CLRCACHE , cache_path);
             abort();
         }
     }
@@ -51,16 +51,12 @@ bool unzipper( const struct ConvertOption* opt ){
     zipfile =  unzOpen64( opt->input_path );
 
     if( zipfile == NULL ) {
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_UNZ_OPENZIP,opt->input_path);
-        abort();
+        put_err_msg_abort( ERRMSG_UNZ_OPENZIP,opt->input_path);
     }
 
     if(unzGetGlobalInfo64( zipfile , &global_info ) != UNZ_OK ){
-        set_console_color(CSC_LIGHTRED);
         unzClose( zipfile );
-        fprintf( stderr , ERRMSG_UNZ_GBINFO);
-        abort();
+        put_err_msg_abort( ERRMSG_UNZ_GBINFO);
     }
 
     int gonext_ret = unzGoToFirstFile( zipfile );
@@ -71,9 +67,7 @@ bool unzipper( const struct ConvertOption* opt ){
            != UNZ_OK)
         {
             unzClose( zipfile );
-            set_console_color(CSC_LIGHTRED);
-            fprintf( stderr , ERRMSG_UNZ_CTFINFO);
-            abort();
+            put_err_msg_abort(ERRMSG_UNZ_CTFINFO);
         }
 
         if(strcmp_ignore_case(fname_in_zip , "noteColors.png"))
@@ -81,17 +75,13 @@ bool unzipper( const struct ConvertOption* opt ){
 
         if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
             unzClose( zipfile );
-            set_console_color(CSC_LIGHTRED);
-            fprintf( stderr , "Failed to open noteColors.png." );
-            abort();
+            put_err_msg_abort("Failed to open noteColors.png." );
         }
             
         if( file_info.uncompressed_size > 1024*1024 ){
             unzCloseCurrentFile( zipfile );
             unzClose( zipfile );
-            set_console_color(CSC_LIGHTRED);
-            fprintf( stderr , ERRMSG_UNZ_PNGTL);
-            abort();
+            put_err_msg_abort( ERRMSG_UNZ_PNGTL);
         }
 
         break;
@@ -105,12 +95,9 @@ bool unzipper( const struct ConvertOption* opt ){
     if( fopen_s(&write_png_fptr, PATH_TO_UNZIP , "wb" ) ){
 #else
     write_png_fptr =  fopen(PATH_TO_UNZIP,"wb");
-    if(!write_png_fptr){
+    if(!write_png_fptr)
 #endif
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_UNZ_TMPCR , opt->temp_path);
-        abort();
-    }
+        put_err_msg_abort( ERRMSG_UNZ_TMPCR , opt->temp_path);
 
     int read_n = 0;
     for(int remain_size = file_info.uncompressed_size ; remain_size>0 ; remain_size-= BUFFER_SIZE )
