@@ -16,22 +16,15 @@ void test_arg( struct ConvertOption* opt){
     !0 = File doesn't exist
 
 */
-    if(!opt->input_path){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_IUNDEF);
-        abort();
-    }
-     if(!opt->output_path){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_OUNDEF);
-        abort();
-    }
+    if(!opt->input_path)
+        put_err_msg_abort( ERRMSG_ARG_IUNDEF);
+    
+     if(!opt->output_path)
+        put_err_msg_abort(ERRMSG_ARG_OUNDEF);
+    
 
-    if(access(opt->input_path,F_OK)){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_IPATH , opt->input_path);
-        abort();
-    }
+    if(access(opt->input_path,F_OK))
+        put_err_msg_abort( ERRMSG_ARG_IPATH , opt->input_path);
     if(access(opt->input_path,R_OK)){
         set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_ARG_PMDEN , opt->input_path);
