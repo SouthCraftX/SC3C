@@ -25,6 +25,7 @@ void png_decoder( const struct ConvertOption* opt ,
 
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
     if( png_ptr == NULL ){
+        set_console_color(CSC_LIGHTRED);
         fprintf(stderr, ERRMSG_PNG_INITDEC);
         abort();
     }
@@ -32,11 +33,13 @@ void png_decoder( const struct ConvertOption* opt ,
     info_ptr = png_create_info_struct( png_ptr );
     if (!info_ptr){
         png_destroy_read_struct(&png_ptr,NULL,NULL);
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_PNG_INITDEC );
         abort();
     }
     int png_error_code = setjmp( png_jmpbuf( png_ptr ) );
     if( png_error_code ){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr, ERRMSG_PNG_DECODE , png_error_code);
 	    abort();
     }
@@ -86,6 +89,7 @@ void export_to_json(  const struct ConvertOption* opt,
 
     FILE* json_ptr = fopen( opt->output_path , "r" );
     if( json_ptr == NULL ){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_OUT_CREATE , opt->output_path);
         destroy_pixel_memory(png);
         abort();

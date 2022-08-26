@@ -17,19 +17,23 @@ void test_arg( struct CovertOption* opt){
 
 */
     if(!opt->input_path){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_ARG_IUNDEF);
         abort();
     }
      if(!opt->output_path){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_ARG_OUNDEF);
         abort();
     }
 
     if(access(opt->input_path,F_OK)){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_ARG_IPATH,opt->input_path);
         abort();
     }
     if(access(opt->input_path,R_OK)){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_ARG_PMDEN,opt->input_path);
         abort();
     }
@@ -56,6 +60,7 @@ void arg_set_path( cstring* src , cstring* dst , cstring arg,
                     int* now_argc_ptr , const int* argc_ptr)
 {
     if((*now_argc_ptr)+1 == *(argc_ptr)){
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_ARG_LOSS , arg);
         abort();
     }
@@ -63,7 +68,6 @@ void arg_set_path( cstring* src , cstring* dst , cstring arg,
      *dst = *src;
     (*now_argc_ptr)+=2;
 }
-
 
 void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv ){
 
@@ -74,7 +78,6 @@ void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv 
     opt->print_error_msg_only   = false ;
     opt->ramdom_color           = false ;
     opt->force_overriding       = false ;
-
 
     if(argc==1){
         puts(INFO_ARG_DOHELP);
@@ -119,9 +122,10 @@ void  arg_processor( struct CovertOption* opt , const int argc ,  cstring* argv 
             goto GOTOLAB_INVAILD_ARG;
         }
         GOTOLAB_INVAILD_ARG:
+            set_console_color(CSC_LIGHTRED);
              fprintf( stderr , ERRMSG_ARG_INVAILD ,argv[now_argc] );
              abort();
-
+             
     }
 /*
         if( !strcmp( argv[now_argc] , "-i" )){

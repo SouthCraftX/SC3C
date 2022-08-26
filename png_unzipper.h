@@ -15,6 +15,7 @@
 #include <unistd.h>
 #endif
 
+#include "console_color.h"
 #include "lang.h"
 #include "defines.h"
 #include "others.h"
@@ -50,11 +51,13 @@ bool unzipper( const struct ConvertOption* opt ){
     zipfile =  unzOpen64( opt->input_path );
 
     if( zipfile == NULL ) {
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_UNZ_OPENZIP,opt->input_path);
         abort();
     }
 
     if(unzGetGlobalInfo64( zipfile , &global_info ) != UNZ_OK ){
+        set_console_color(CSC_LIGHTRED);
         unzClose( zipfile );
         fprintf( stderr , ERRMSG_UNZ_GBINFO);
         abort();
@@ -68,6 +71,7 @@ bool unzipper( const struct ConvertOption* opt ){
            != UNZ_OK)
         {
             nzClose( zipfile );
+            set_console_color(CSC_LIGHTRED);
             fprintf( stderr , ERRMSG_UNZ_CTFINFO);
             abort();
         }
@@ -77,6 +81,7 @@ bool unzipper( const struct ConvertOption* opt ){
 
         if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
             unzClose( zipfile );
+            set_console_color(CSC_LIGHTRED);
             fprintf( stderr , "Failed to open noteColors.png." );
             abort();
         }
@@ -84,6 +89,7 @@ bool unzipper( const struct ConvertOption* opt ){
         if( file_info.uncompressed_size > 1024*1024 ){
             unzCloseCurrentFile( zipfile );
             unzClose( zipfile );
+            set_console_color(CSC_LIGHTRED);
             fprintf( stderr , ERRMSG_UNZ_PNGTL);
             abort();
         }
@@ -101,6 +107,7 @@ bool unzipper( const struct ConvertOption* opt ){
     write_png_fptr =  fopen(PATH_TO_UNZIP,"wb");
     if(!write_png_fptr){
 #endif
+        set_console_color(CSC_LIGHTRED);
         fprintf( stderr , ERRMSG_UNZ_TMPCR , opt->temp_path);
         abort();
     }
