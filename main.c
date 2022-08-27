@@ -26,10 +26,9 @@ void png_decoder( const struct ConvertOption* opt ,
     FILE*           temp_png_file_ptr   = fopen(opt->temp_path, "rb");
 
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
-    if( png_ptr == NULL ){
+    if( png_ptr == NULL )
         put_err_msg_abort( ERRMSG_PNG_INITDEC);
-    }
-
+    
     info_ptr = png_create_info_struct( png_ptr );
     if (!info_ptr){
         png_destroy_read_struct(&png_ptr,NULL,NULL);
@@ -84,13 +83,10 @@ void export_to_json(  const struct ConvertOption* opt,
 
     FILE* json_ptr = fopen( opt->output_path , "r" );
     if( json_ptr == NULL ){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_OUT_CREATE , opt->output_path);
         destroy_pixel_memory(png);
-        abort();
+        put_err_msg_abort( ERRMSG_OUT_CREATE , opt->output_path);
     }
     fputc('[',json_ptr);
-
    //ugly
    for( ulong32 hei = 0 ; hei < png->height ; ++hei ) {
         for( ulong32 wid = 0 ; wid < png->width ; ++wid ){
