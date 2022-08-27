@@ -88,7 +88,7 @@ void export_to_json(  const struct ConvertOption* opt,
     }
     fputc('[',json_ptr);
    //ugly
-   for( ulong32 hei = 0 ; hei < png->height ; ++hei ) {
+    for( ulong32 hei = 0 ; hei < png->height ; ++hei ) {
         for( ulong32 wid = 0 ; wid < png->width ; ++wid ){
             fprintf(  json_ptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},", 
                       png->row_ptr[hei][wid*4],png->row_ptr[hei][wid*4+1],

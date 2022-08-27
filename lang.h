@@ -1,13 +1,12 @@
 #ifndef SC3CHF_LANG
 #define SC3CHF_LANG
 
-#define LANG_ZH_CN
 
 #ifdef LANG_ZH_CN
 
+#define WARN_OVERRIDE       ("警告：%s已存在，要覆盖它吗？(y/n)")
 
-
-#define INFO_ARG_DOHELP ("未指定任何参数，请用'-h'参数以查看命令用法")
+#define INFO_ARG_DOHELP     ("未指定任何参数，请用'-h'参数以查看命令用法")
 
 #define INFO_UNZ_OPENZIP    ("[压缩文件I/O]打开UMP资源包文件成功\n")
 #define INFO_UNZ_GBINFO     ("[压缩文件I/O]获取资源包全局信息成功\n")
@@ -31,9 +30,9 @@
 #define ERRMSG_UNZ_CTFINFO  ("[压缩文件I/O]获取资源包内当前文件信息失败！\n")
 #define ERRMSG_UNZ_CTFOPEN  ("[压缩文件I/O]无法打开资源包内包含颜色配置信息的PNG文件！\n")
 #define ERRMSG_UNZ_PNGTL    ("[压缩文件I/O]包含颜色配置信息的PNG文件过大！其必须小于1MB！\n")
+#define ERRMSG_UNZ_OPENPNG  ("[压缩文件I/O]无法从资源包中读取颜色配置文件！\n")
 #define ERRMSG_UNZ_TMPCR    ("[文件I/O]%s:无法创建临时文件！请重新指定临时文件路径！\n")
 #define ERRMSG_UNZ_TMPFW    ("[文件I/O]%s:无法写入临时文件！\n")
-#define ERRMSG_UNZ_OPENPNG  ("[Zip Archive I/O]")
 
 #define ERRMSG_OUT_COLTM    ("[JSON导出]颜色配置太多！颜色数量最多为655,35种！\n")
 #define ERRMSG_OUT_WRITR    ("[JSON导出]%s:写入JSON文件失败！\n")
@@ -60,7 +59,9 @@ const char* help_text =  "使用方法: sc3c.exe -i <源文件路径> -o <J输�
                          "  -e\t转换时仅显示错误信息\n";
 #else
 
-#define INFO_ARG_DOHELP ("Run 'SC3C -h' to get help.\n")
+#define WARN_OVERRIDE       ("Warning: %s is already exist.Override?(y/n):")
+
+#define INFO_ARG_DOHELP     ("Run 'SC3C -h' to get help.\n")
 
 #define INFO_PNG_INITDEC    ("[PNG Decoder]Succeed to initialise PNG decoder.\n")
 
@@ -75,11 +76,14 @@ const char* help_text =  "使用方法: sc3c.exe -i <源文件路径> -o <J输�
 #define ERRMSG_ARG_IPATH    ("[Arg Processor]%s:No such a file or directory.\n")
 #define ERRMSG_ARG_PMDEN    ("[Arg Processor]%s:Permission denied.\n")
 #define ERRMSG_ARG_LOSS     ("[Arg Processor]%i:Argument loss.\n")
+#define ERRMSG_ARG_IUNDEF   ("[Arg Processor]Source file is not specifiesed!\n")
+#define ERRMSG_ARG_OUNDEF   ("[Arg Processor]Output file is not specifiesed!\n")
 
 #define ERRMSG_OWW_INPUT    ("Invalid input!File overwrite cancelled.\n")
 
 #define ERRMSG_PNG_INITDEC  ("[PNG Decoder]Failed to initialise PNG decoder.\n")
 #define ERRMSG_PNG_DECODE   ("[PNG Decoder]An error occurred while decoding the PNG, error code: %i.\n")
+
 
 #define ERRMSG_UNZ_CLRCACHE ("[Zip Archive I/O]Failed to clean cache,please delete %s.\n")
 #define ERRMSG_UNZ_OPENZIP  ("[Zip Archive I/O]%s:Failed to open the zip file.\n")
@@ -89,6 +93,7 @@ const char* help_text =  "使用方法: sc3c.exe -i <源文件路径> -o <J输�
 #define ERRMSG_UNZ_PNGTL    ("[Zip Archive I/O]PNG file is too large.\n")
 #define ERRMSG_UNZ_TMPCR    ("[File I/O]%s:Failed to create temporary file.\n")
 #define ERRMSG_UNZ_TMPFW    ("[File I/O]%s:Failed to write temporary file.Please secifies anothor path. \n")
+#define ERRMSG_UNZ_OPENPNG  ("[Zip Archive I/O]Failed to read the colour configure from the resource pack!\n")
 
 #define ERRMSG_OUT_COLTM    ("[JSON Exporter]颜色配置太多！颜色数量最多为655,35种！\n")
 #define ERRMSG_OUT_CREATE   ("[JSON Exporter]%s:Failed to create JSON file.")

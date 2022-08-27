@@ -75,7 +75,7 @@ void unzipper( const struct ConvertOption* opt ){
 
         if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
             unzClose( zipfile );
-            put_err_msg_abort("Failed to open noteColors.png." );
+            put_err_msg_abort( ERRMSG_UNZ_OPENPNG );
         }
             
         if( file_info.uncompressed_size > 1024*1024 ){
