@@ -25,11 +25,8 @@ void test_arg( struct ConvertOption* opt){
 
     if(access(opt->input_path,F_OK))
         put_err_msg_abort( ERRMSG_ARG_IPATH , opt->input_path);
-    if(access(opt->input_path,R_OK)){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_PMDEN , opt->input_path);
-        abort();
-    }
+    if(access(opt->input_path,R_OK))
+        put_err_msg_abort( ERRMSG_ARG_PMDEN , opt->input_path);
     if((!access(opt->output_path,F_OK))&&(!opt->force_overriding)){
         if(!file_exist_warning(opt->output_path))
             exit(0);
@@ -49,15 +46,12 @@ void test_arg( struct ConvertOption* opt){
     src (aka source)
     dst (aka destination)
 */
-void arg_set_path( cstring* src , cstring* dst , cstring arg,
+void arg_set_path( cstring* src , cstring* dst , ccstring arg,
                     int* now_argc_ptr , const int* argc_ptr)
 {
-    if((*now_argc_ptr)+1 == *(argc_ptr)){
-        set_console_color(CSC_LIGHTRED);
-        fprintf( stderr , ERRMSG_ARG_LOSS , arg);
-        abort();
-    }
-     *dst = *src;
+    if((*now_argc_ptr)+1 == *(argc_ptr))
+        put_err_msg_abort( ERRMSG_ARG_LOSS , arg);
+    *dst = *src;
     (*now_argc_ptr)+=2;
 }
 
@@ -114,9 +108,7 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv
             goto GOTOLAB_INVAILD_ARG;
         }
         GOTOLAB_INVAILD_ARG:
-            set_console_color(CSC_LIGHTRED);
-            fprintf( stderr , ERRMSG_ARG_INVAILD ,argv[now_argc] );
-            abort();
+            put_err_msg_abort( ERRMSG_ARG_INVAILD ,argv[now_argc] );
 
     }
 /*

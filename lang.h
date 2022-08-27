@@ -9,11 +9,11 @@
 
 #define INFO_ARG_DOHELP ("未指定任何参数，请用'-h'参数以查看命令用法")
 
-#define INFO_UNZ_OPENZIP    ("[ZipArchive I/O]打开UMP资源包文件成功\n")
-#define INFO_UNZ_GBINFO     ("[ZipArchive I/O]获取资源包全局信息成功\n")
-#define INFO_UNZ_CTFINFO    ("[ZipArchive I/O]获取资源包内当前文件信息成功\n")
-#define INFO_UNZ_CTFOPEN    ("[ZipArchive I/O]成功打开资源包内包含颜色配置信息的PNG文件\n")
-#define INFO_UNZ_CLEAN      ("[ZipArchive I/O]已清除清理缓存\n")
+#define INFO_UNZ_OPENZIP    ("[压缩文件I/O]打开UMP资源包文件成功\n")
+#define INFO_UNZ_GBINFO     ("[压缩文件I/O]获取资源包全局信息成功\n")
+#define INFO_UNZ_CTFINFO    ("[压缩文件I/O]获取资源包内当前文件信息成功\n")
+#define INFO_UNZ_CTFOPEN    ("[压缩文件I/O]成功打开资源包内包含颜色配置信息的PNG文件\n")
+#define INFO_UNZ_CLEAN      ("[压缩文件I/O]已清除清理缓存\n")
 
 #define INFO_PNG_ALLOC      ("[PNG解码器]成功为像素数据分配内存\n")
 
@@ -25,14 +25,15 @@
 #define ERRMSG_ARG_IUNDEF   ("[参数处理器]未指定源文件!\n")
 #define ERRMSG_ARG_OUNDEF   ("[参数处理器]未指定输出文件!\n")
 
-#define ERRMSG_UNZ_CLRCACHE ("[ZipArchive I/O]无法清理缓存，请手动删除%s.\n")
-#define ERRMSG_UNZ_OPENZIP  ("[ZipArchive I/O]%s:打开UMP资源包文件失败！\n")
-#define ERRMSG_UNZ_GBINFO   ("[ZipArchive I/O]获取资源包全局信息失败！\n")
-#define ERRMSG_UNZ_CTFINFO  ("[ZipArchive I/O]获取资源包内当前文件信息失败！\n")
-#define ERRMSG_UNZ_CTFOPEN  ("[ZipArchive I/O]无法打开资源包内包含颜色配置信息的PNG文件！\n")
-#define ERRMSG_UNZ_PNGTL    ("[ZipArchive I/O]包含颜色配置信息的PNG文件过大！其必须小于1MB！\n")
-#define ERRMSG_UNZ_TMPCR    ("[File I/O]%s:无法创建临时文件！请重新指定临时文件路径！\n")
-#define ERRMSG_UNZ_TMPFW    ("[File I/O]%s:无法写入临时文件！\n")
+#define ERRMSG_UNZ_CLRCACHE ("[压缩文件I/O]无法清理缓存，请手动删除%s.\n")
+#define ERRMSG_UNZ_OPENZIP  ("[压缩文件I/O]%s:打开UMP资源包文件失败！\n")
+#define ERRMSG_UNZ_GBINFO   ("[压缩文件I/O]获取资源包全局信息失败！\n")
+#define ERRMSG_UNZ_CTFINFO  ("[压缩文件I/O]获取资源包内当前文件信息失败！\n")
+#define ERRMSG_UNZ_CTFOPEN  ("[压缩文件I/O]无法打开资源包内包含颜色配置信息的PNG文件！\n")
+#define ERRMSG_UNZ_PNGTL    ("[压缩文件I/O]包含颜色配置信息的PNG文件过大！其必须小于1MB！\n")
+#define ERRMSG_UNZ_TMPCR    ("[文件I/O]%s:无法创建临时文件！请重新指定临时文件路径！\n")
+#define ERRMSG_UNZ_TMPFW    ("[文件I/O]%s:无法写入临时文件！\n")
+#define ERRMSG_UNZ_OPENPNG  ("[Zip Archive I/O]")
 
 #define ERRMSG_OUT_COLTM    ("[JSON导出]颜色配置太多！颜色数量最多为655,35种！\n")
 #define ERRMSG_OUT_WRITR    ("[JSON导出]%s:写入JSON文件失败！\n")

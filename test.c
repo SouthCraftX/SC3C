@@ -1,46 +1,15 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <zip.h>
+#include <stdarg.h>
 
+void put_err_msg( const char* formated_msg  , ...){
+    va_list arg;
+    va_start( arg , formated_msg );
+    vfprintf( stderr , formated_msg , arg);
+    va_end(arg);
+}
 
-int main()
-{
-        char buffer[1024];
-        char *path = "./1.zip";
-        int err = 0;
-        zip_t *archive = NULL;
-        zip_file_t *file = NULL;
-        zip_int64_t n = 0;
+int main(){
 
-        //打开zip压缩文件
-        archive = zip_open(path, ZIP_RDONLY, &err);
-        if(archive == NULL)
-        {
-                printf("open 1.zip failed, err=%d,message=%s\n", err , zip_error_strerror(&err));
-                return -1;
-        }
+    put_err_msg( "Ptr=%p,Str=%s" , 0X8000 , "hi");
 
-        //打开zip文件里的其中一个文件
-        file = zip_fopen(archive, "1.txt", ZIP_FL_COMPRESSED);
-        if(file == NULL)
-        {
-                printf("open 1.txt failed\n");
-                zip_close(archive);
-                return -1;
-        }
-
-        //读其中一个文件的内容
-        memset(buffer, 0x00, sizeof(buffer));
-        n = zip_fread(file, buffer, 100);
-
-        printf("%s", buffer);
-
-        //关闭其中一个文件
-        zip_fclose(file);
-
-        //关闭压缩文件
-        zip_close(archive);
-
-        return 0;
 }

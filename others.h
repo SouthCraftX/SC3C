@@ -20,7 +20,7 @@ void do_help(){
 }
 
 void destroy_pixel_memory( struct PNGData* png ){
-    for(int hei = 0 ; hei < png->height ; ++hei ){
+    for(ulong32 hei = 0 ; hei < png->height ; ++hei ){
         free(png->row_ptr);
     }
     free(png->row_ptr);
@@ -31,12 +31,14 @@ void destroy_pixel_memory( struct PNGData* png ){
  //       )
 
 
-//Print a error message.
-void put_err_msg( ccstring formated_msg  , ...){
+//Print a error message end abort.
+void put_err_msg_abort( ccstring formated_msg  , ...){
     va_list arg;
     va_start( arg , formated_msg );
-    fprintf( stderr , formated_msg , arg);
+    set_console_color(CSC_LIGHTRED);
+    vfprintf( stderr , formated_msg , arg);
     va_end(arg);
+    abort();
 }
 
 
@@ -45,13 +47,13 @@ void put_info_msg( const bool if_put  ,
     va_list arg;
     va_start( arg , formated_msg );
     if(if_put)
-        printf( formated_msg , arg );
+        vprintf( formated_msg , arg );
     va_end(arg);
     return;
 }
 
 bool file_exist_warning( ccstring path){
-    set_console_color(CSC_LIGHTYELLOW);
+    set_console_color(CSC_YELLOW);
     printf("Warning: %s is already exist.Override?(y/n):",path);
     set_console_color(CSC_WHITE);
     char input;

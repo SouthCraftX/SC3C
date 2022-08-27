@@ -36,7 +36,7 @@ void clean_cache( ccstring cache_path ){
     }
 }
 
-bool unzipper( const struct ConvertOption* opt ){
+void unzipper( const struct ConvertOption* opt ){
     //char* zip_path;
 
     assert(opt!=NULL);
@@ -51,7 +51,7 @@ bool unzipper( const struct ConvertOption* opt ){
     zipfile =  unzOpen64( opt->input_path );
 
     if( zipfile == NULL ) {
-        put_err_msg_abort( ERRMSG_UNZ_OPENZIP,opt->input_path);
+        put_err_msg_abort( ERRMSG_UNZ_OPENZIP , opt->input_path);
     }
 
     if(unzGetGlobalInfo64( zipfile , &global_info ) != UNZ_OK ){
@@ -67,10 +67,10 @@ bool unzipper( const struct ConvertOption* opt ){
            != UNZ_OK)
         {
             unzClose( zipfile );
-            put_err_msg_abort(ERRMSG_UNZ_CTFINFO);
+            put_err_msg_abort( ERRMSG_UNZ_CTFINFO );
         }
 
-        if(strcmp_ignore_case(fname_in_zip , "noteColors.png"))
+        if(strcmp_ignore_case(fname_in_zip , PNG_NAME ))
             goto GOTOLAB_NEXTFILE;
 
         if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
@@ -116,7 +116,6 @@ bool unzipper( const struct ConvertOption* opt ){
            // QUITMSG( "Failed to write temporary file." );
 
         //size_t write_ret = writepng( io_buffer , file_info.uncompressed_size , 1, write_png_fptr );
-        return true;
     }
 
 #endif
