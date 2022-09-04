@@ -141,3 +141,13 @@ bool UnzipPNGFile( struct _ResPackArchive* _archive ){
         fprintf( stderr , "Wrong number of colour channels:%i",png->num_channel);
     }
     */
+
+    
+            //for( int l = 0; l< file_info.uncompressed_size ; ++l){
+        //    printf("%c ",*(io_buffer+l));
+        //}
+
+        //if( !writepng( io_buffer , file_info.uncompressed_size ,1, write_png_fptr ))
+           // QUITMSG( "Failed to write temporary file." );
+
+        //size_t write_ret = writepng( io_buffer , file_info.uncompressed_size , 1, write_png_fptr );

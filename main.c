@@ -23,7 +23,7 @@ void png_decoder( const struct ConvertOption* opt ,
 
     png_structp     png_ptr             = NULL;
     png_infop       info_ptr            = NULL;
-    FILE*           temp_png_file_ptr   = fopen(opt->temp_path, "rb");
+    FILE*           png_handle          = fopen(opt->temp_path, "rb");
 
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
     if( png_ptr == NULL )
@@ -38,7 +38,10 @@ void png_decoder( const struct ConvertOption* opt ,
     if( png_error_code )
         put_err_msg_abort( ERRMSG_PNG_DECODE , png_error_code);
 
-    png_init_io( png_ptr, temp_png_file_ptr );
+    if(!png_handle)
+        put_err_msg_abort("无法读取PNG\n");
+
+    png_init_io( png_ptr, png_handle );
     //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
 
     long32 bit_depth,color_type;
@@ -74,7 +77,7 @@ void png_decoder( const struct ConvertOption* opt ,
     png_read_image( png_ptr, png->row_ptr);
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
-    fclose(temp_png_file_ptr);
+    fclose( png_handle );
 
 }
 

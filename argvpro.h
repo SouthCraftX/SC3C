@@ -16,12 +16,12 @@ void test_arg( struct ConvertOption* opt){
     !0 = File doesn't exist
 
 */
+
     if(!opt->input_path)
         put_err_msg_abort( ERRMSG_ARG_IUNDEF);
     
      if(!opt->output_path)
-        put_err_msg_abort(ERRMSG_ARG_OUNDEF);
-    
+        put_err_msg_abort(ERRMSG_ARG_OUNDEF);  
 
     if(access(opt->input_path,F_OK))
         put_err_msg_abort( ERRMSG_ARG_IPATH , opt->input_path);
@@ -40,6 +40,7 @@ void test_arg( struct ConvertOption* opt){
         opt->temp_path = tmpnam(NULL);
     }
 
+     if(opt->show_opt) print_opt(opt);
 }
 
 /*
@@ -64,11 +65,14 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv
     opt->print_error_msg_only   = false ;
     opt->ramdom_color           = false ;
     opt->force_overriding       = false ;
+    opt->show_opt               = false ;
 
     if(argc==1){
         puts(INFO_ARG_DOHELP);
         exit(0);
     }
+
+    put_info_msg( opt->print_info_msg , "Debug:arg_processor() is running...\n")
 
     while ( now_argc < argc ){
 
@@ -92,11 +96,15 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv
                     ++now_argc;
                     break;
                 case 'e':
-                    opt->print_error_msg_only = true;
+                    opt->print_info_msg = false;
                     ++now_argc;
                     break;
                 case 'h':
                     do_help();
+                    ++now_argc;
+                    break;
+                case 'p':
+                    opt->show_opt = true;
                     ++now_argc;
                     break;
                 default:

@@ -68,6 +68,8 @@ const char* help_text =  "使用方法: sc3c.exe -i <源文件路径> -o <J输�
 #define IBFO_UNZ_CLRCACHE   ("[Zip Archive I/O]Succeed to clean cache.\n")
 #define INFO_UNZ_OPENZIP    ("[Zip Archive I/O]Succeed to open %s.\n")
 #define INFO_UNZ_GBINFO     ("[Zip Archive I/O]Succeed to get global info of &s.\n")
+#define INFO_UNZ_CTFINFO    ("[Zip Archive I/O]Succeed to get PNG file info.\n")
+#define INFO_UNZ_CTFOPEN    ("[Zip Archive I/O]Succeed to open noteColors.png in the zip file.\n")
 
 #define INFO_PNG_ALLOC      ("[PNG Decoder]Succeed to allocate memory for pixel data.\n")
 

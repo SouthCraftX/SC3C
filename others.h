@@ -41,7 +41,6 @@ void put_err_msg_abort( ccstring formated_msg  , ...){
     abort();
 }
 
-
 void put_info_msg( const bool if_put  ,
                    ccstring formated_msg , ... ){
     va_list arg;
@@ -52,10 +51,32 @@ void put_info_msg( const bool if_put  ,
     return;
 }
 
+void put_debug_msg (const bool if_put  ,
+                   ccstring formated_msg , ... )
+{
+    set_console_color( CSC_GREEN );
+    va_list arg;
+    va_start( arg , formated_msg );
+    if(if_put)
+        vprintf( formated_msg , arg );
+    va_end(arg);
+    set_console_color( CSC_WHITE );
+    return;        
+}
+
+void print_opt(const struct ConvertOption* opt){
+    set_console_color( CSC_GREEN );
+    puts("=====DEBUG=====\nConvert Option:\n");
+    printf("\tInput Path = %s\n\tOutput Path = %s\n\tTemp File Path = %s\n\tForce Overriding = %i\n\t"\
+            "Print Info Message = %i\n\t",
+            opt->input_path , opt->output_path , opt->temp_path, 
+            opt->force_overriding  , opt->print_info_msg );
+}
+
 bool file_exist_warning( ccstring path){
-    set_console_color(CSC_YELLOW);
+    set_console_color( CSC_YELLOW );
     printf(WARN_OVERRIDE,path);
-    set_console_color(CSC_WHITE);
+    set_console_color( CSC_WHITE );
     char input;
     fflush ( stdin );
     scanf("%c",&input);

@@ -52,10 +52,11 @@ struct ConvertOption {
     char* input_path;
     char* output_path;
     char* temp_path;
-    bool  print_error_msg_only : 1;
+    bool  print_info_msg : 1;
     bool  force_overriding : 1;
     bool  ramdom_color : 1;
     bool  no_cleaning : 1;
+    bool  show_opt : 1 ;    // this
 };
 
 
