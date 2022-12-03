@@ -39,8 +39,8 @@ void clean_cache( ccstring cache_path ){
 void unzipper( const struct ConvertOption* opt ){
     //char* zip_path;
 
-    put_debug_msg( opt->print_info_msg , "Debug:unzipper() is running...\n");
-    assert(opt!=NULL);
+    assert(opt);
+    put_debug_msg( opt->print_info_msg , "Debug:[+]",__func__ ,"\n");
 
     byte                io_buffer       [BUFFER_SIZE] ;
     unzFile             zipfile         =  NULL       ;
@@ -65,7 +65,7 @@ void unzipper( const struct ConvertOption* opt ){
     int gonext_ret = unzGoToFirstFile( zipfile );
 
     while( gonext_ret == UNZ_OK ){
-        if(unzGetCurrentFileInfo64( zipfile , &file_info , fname_in_zip , 
+        if(unzGetCurrentFileInfo64( zipfile , &file_info , fname_in_zip ,
                                     sizeof(fname_in_zip) , NULL , 0 , NULL , 0)
            != UNZ_OK)
         {
@@ -92,12 +92,12 @@ void unzipper( const struct ConvertOption* opt ){
             put_err_msg_abort( ERRMSG_UNZ_PNGTL);
         }
         break;
- 
+
         GOTOLAB_NEXTFILE:
             put_debug_msg( opt->print_info_msg , " [Skipped]\n");
             gonext_ret = unzGoToNextFile( zipfile );
     }
-    
+
            FILE* write_png_fptr;
 #ifdef  __STDC_LIB_EXT1__
         if( fopen_s(&write_png_fptr, PATH_TO_UNZIP , "wb" ) ){
@@ -118,7 +118,7 @@ void unzipper( const struct ConvertOption* opt ){
         }
         unzCloseCurrentFile( zipfile );
         unzClose( zipfile );
-        put_debug_msg( opt->print_info_msg , "Debug:unzipper() is exiting...\n");
+        put_debug_msg( opt->print_info_msg , "Debug:[-]",__func__,"\n");
     }
 
 #endif

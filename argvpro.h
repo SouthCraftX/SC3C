@@ -19,9 +19,9 @@ void test_arg( struct ConvertOption* opt){
 
     if(!opt->input_path)
         put_err_msg_abort( ERRMSG_ARG_IUNDEF);
-    
+
      if(!opt->output_path)
-        put_err_msg_abort(ERRMSG_ARG_OUNDEF);  
+        put_err_msg_abort(ERRMSG_ARG_OUNDEF);
 
     if(access(opt->input_path,F_OK))
         put_err_msg_abort( ERRMSG_ARG_IPATH , opt->input_path);
@@ -62,9 +62,7 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv
     opt->temp_path              = NULL  ;
     opt->input_path             = NULL  ;
     opt->output_path            = NULL  ;
-    opt->print_error_msg_only   = false ;
-    opt->ramdom_color           = false ;
-    opt->force_overriding       = false ;
+       opt->force_overriding       = false ;
     opt->show_opt               = false ;
 
     if(argc==1){
@@ -72,7 +70,6 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv
         exit(0);
     }
 
-    put_info_msg( opt->print_info_msg , "Debug:arg_processor() is running...\n")
 
     while ( now_argc < argc ){
 

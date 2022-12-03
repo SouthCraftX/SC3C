@@ -26,8 +26,8 @@ void destroy_pixel_memory( struct PNGData* png ){
     free(png->row_ptr);
 }
 
-//#define put_err_msg( format , ...) ( 
- //           fprintf(stderr, format , __VA_ARGS__) 
+//#define put_err_msg( format , ...) (
+ //           fprintf(stderr, format , __VA_ARGS__)
  //       )
 
 
@@ -61,18 +61,19 @@ void put_debug_msg (const bool if_put  ,
         vprintf( formated_msg , arg );
     va_end(arg);
     set_console_color( CSC_WHITE );
-    return;        
+    return;
 }
 
+/*
 void print_opt(const struct ConvertOption* opt){
     set_console_color( CSC_GREEN );
     puts("=====DEBUG=====\nConvert Option:\n");
     printf("\tInput Path = %s\n\tOutput Path = %s\n\tTemp File Path = %s\n\tForce Overriding = %i\n\t"\
             "Print Info Message = %i\n\t",
-            opt->input_path , opt->output_path , opt->temp_path, 
+            opt->input_path , opt->output_path , opt->temp_path,
             opt->force_overriding  , opt->print_info_msg );
 }
-
+*/
 bool file_exist_warning( ccstring path){
     set_console_color( CSC_YELLOW );
     printf(WARN_OVERRIDE,path);

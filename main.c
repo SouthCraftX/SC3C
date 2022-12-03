@@ -25,10 +25,13 @@ void png_decoder( const struct ConvertOption* opt ,
     png_infop       info_ptr            = NULL;
     FILE*           png_handle          = fopen(opt->temp_path, "rb");
 
+    if(!png_handle)
+        put_err_msg_abort("无法读取PNG\n");
+
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
     if( png_ptr == NULL )
         put_err_msg_abort( ERRMSG_PNG_INITDEC);
-    
+
     info_ptr = png_create_info_struct( png_ptr );
     if (!info_ptr){
         png_destroy_read_struct(&png_ptr,NULL,NULL);
@@ -38,14 +41,12 @@ void png_decoder( const struct ConvertOption* opt ,
     if( png_error_code )
         put_err_msg_abort( ERRMSG_PNG_DECODE , png_error_code);
 
-    if(!png_handle)
-        put_err_msg_abort("无法读取PNG\n");
 
     png_init_io( png_ptr, png_handle );
-    //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
+    png_read_info( png_ptr, info_ptr );
 
     long32 bit_depth,color_type;
-    png_get_IHDR( png_ptr , info_ptr , &png->width , &png->height, 
+    png_get_IHDR( png_ptr , info_ptr , &png->width , &png->height,
                   &bit_depth , &color_type , NULL , NULL, NULL );
 
     //png->num_channel = png_get_channels( png_ptr , info_ptr );
@@ -58,11 +59,11 @@ void png_decoder( const struct ConvertOption* opt ,
         png_set_expand_gray_1_2_4_to_8( png_ptr );    //要求位深度强制8bit
     if ( png_get_valid( png_ptr , info_ptr , PNG_INFO_tRNS ) )
        png_set_tRNS_to_alpha( png_ptr);
-    if( color_type == PNG_COLOR_TYPE_RGB || 
-        color_type == PNG_COLOR_TYPE_GRAY || 
+    if( color_type == PNG_COLOR_TYPE_RGB ||
+        color_type == PNG_COLOR_TYPE_GRAY ||
         color_type == PNG_COLOR_TYPE_PALETTE )
         png_set_filler( png_ptr , DEFAULT_ALPHA , PNG_FILLER_AFTER);  // These color_type don't have an alpha channel then fill it with DEFAULT_ALPHA.
-    if( color_type == PNG_COLOR_TYPE_GRAY || 
+    if( color_type == PNG_COLOR_TYPE_GRAY ||
         color_type == PNG_COLOR_TYPE_GRAY_ALPHA )
         png_set_gray_to_rgb( png_ptr );               //灰度必须转换成RGB
 
@@ -93,7 +94,7 @@ void export_to_json(  const struct ConvertOption* opt,
    //ugly
     for( ulong32 hei = 0 ; hei < png->height ; ++hei ) {
         for( ulong32 wid = 0 ; wid < png->width ; ++wid ){
-            fprintf(  json_ptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},", 
+            fprintf(  json_ptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
                       png->row_ptr[hei][wid*4],png->row_ptr[hei][wid*4+1],
                       png->row_ptr[hei][wid*4+2],png->row_ptr[hei][wid*4+3]);
         //if( is_successful ==  EOF ){
@@ -102,7 +103,7 @@ void export_to_json(  const struct ConvertOption* opt,
             //exit(WriteJson);
             }
    }
-   
+
    fputs( "\b]" , json_ptr );
    fclose( json_ptr );
 }
