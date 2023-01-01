@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <zip.h>
 
 #ifdef _WIN32
@@ -44,6 +45,7 @@ void png_decoder( const struct ConvertOption* opt ,
 
     png_init_io( png_ptr, png_handle );
     png_read_info( png_ptr, info_ptr );
+    //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
 
     long32 bit_depth,color_type;
     png_get_IHDR( png_ptr , info_ptr , &png->width , &png->height,
@@ -85,7 +87,7 @@ void png_decoder( const struct ConvertOption* opt ,
 void export_to_json(  const struct ConvertOption* opt,
                       struct PNGData* png){
 
-    FILE* json_ptr = fopen( opt->output_path , "r" );
+    FILE* json_ptr = fopen( opt->output_path , "wb" );
     if( json_ptr == NULL ){
         destroy_pixel_memory(png);
         put_err_msg_abort( ERRMSG_OUT_CREATE , opt->output_path);
@@ -97,21 +99,26 @@ void export_to_json(  const struct ConvertOption* opt,
             fprintf(  json_ptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
                       png->row_ptr[hei][wid*4],png->row_ptr[hei][wid*4+1],
                       png->row_ptr[hei][wid*4+2],png->row_ptr[hei][wid*4+3]);
-        //if( is_successful ==  EOF ){
-            //fprintf( stderr , "Failed to write JSON file!");
-            //fclose( json_ptr );
-            //exit(WriteJson);
-            }
+        }
    }
-
-   fputs( "\b]" , json_ptr );
+   fseek(json_ptr , -1 , SEEK_CUR );
+   fputs( "]" , json_ptr );
    fclose( json_ptr );
 }
+/*
+void signal_catch(int signum){
+    fprintf(stderr,"Caught signal:%i",signum);
+    abort();
+}
+*/
+
 
 int main( int argn , char* argc[]  ){
 
     struct ConvertOption    opt;
     struct PNGData 	        png;
+
+    //signal( SIGSEGV , signal_catch );
 
     //懒得单独写一个构造函数了，就直接在main()里写吧
     {

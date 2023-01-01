@@ -5,9 +5,9 @@
 #include <zlib.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "zconf.h"
-#include <minizip\zip.h>
-#include <minizip\unzip.h>
+//#include "zconf.h"
+#include <zip.h>
+#include <unzip.h>
 #include <assert.h>
 #ifdef _WIN32
 #include <io.h>
@@ -54,13 +54,11 @@ void unzipper( const struct ConvertOption* opt ){
     if( zipfile == NULL ) {
         put_err_msg_abort( ERRMSG_UNZ_OPENZIP , opt->input_path);
     }
-    put_info_msg( opt->print_info_msg , INFO_UNZ_OPENZIP );
 
     if(unzGetGlobalInfo64( zipfile , &global_info ) != UNZ_OK ){
         unzClose( zipfile );
         put_err_msg_abort( ERRMSG_UNZ_GBINFO );
     }
-    put_info_msg( opt->print_info_msg, INFO_UNZ_GBINFO );
 
     int gonext_ret = unzGoToFirstFile( zipfile );
 
@@ -86,7 +84,6 @@ void unzipper( const struct ConvertOption* opt ){
         put_info_msg(opt->print_info_msg , INFO_UNZ_CTFOPEN );
 
         if( file_info.uncompressed_size > 1024*1024 ){
-            printf("file_info.uncompressed_size = %llx",file_info.uncompressed_size);
             unzCloseCurrentFile( zipfile );
             unzClose( zipfile );
             put_err_msg_abort( ERRMSG_UNZ_PNGTL);
@@ -94,31 +91,23 @@ void unzipper( const struct ConvertOption* opt ){
         break;
 
         GOTOLAB_NEXTFILE:
-            put_debug_msg( opt->print_info_msg , " [Skipped]\n");
             gonext_ret = unzGoToNextFile( zipfile );
     }
 
-           FILE* write_png_fptr;
-#ifdef  __STDC_LIB_EXT1__
-        if( fopen_s(&write_png_fptr, PATH_TO_UNZIP , "wb" ) ){
-#else
-        write_png_fptr =  fopen(opt->temp_path,"wb");
-        if(!write_png_fptr){
-#endif
+        FILE* write_png_fptr = fopen( PATH_TO_UNZIP , "wb" );
+        if( !write_png_fptr ){
             put_err_msg_abort( ERRMSG_UNZ_TMPCR , opt->temp_path);
         }
         memset( io_buffer , 0 , BUFFER_SIZE );
-        int read_n = 0;
-
-        put_debug_msg( opt->print_info_msg , "Debug:Start to unzip...\n");
+        int read_n = 0 , write_n;
         for(int remain_size = file_info.uncompressed_size ; remain_size>0 ; remain_size-= BUFFER_SIZE )
         {
             read_n =  unzReadCurrentFile( zipfile , io_buffer , BUFFER_SIZE );
-            fwriter( io_buffer , read_n , 1 , write_png_fptr );
+            write_n = fwrite( io_buffer , 1 , read_n , write_png_fptr );
         }
+        fclose(write_png_fptr);
         unzCloseCurrentFile( zipfile );
         unzClose( zipfile );
-        put_debug_msg( opt->print_info_msg , "Debug:[-]",__func__,"\n");
     }
 
-#endif
+#endif  

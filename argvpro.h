@@ -19,10 +19,9 @@ void test_arg( struct ConvertOption* opt){
 
     if(!opt->input_path)
         put_err_msg_abort( ERRMSG_ARG_IUNDEF);
-
+    
      if(!opt->output_path)
-        put_err_msg_abort(ERRMSG_ARG_OUNDEF);
-
+        put_err_msg_abort(ERRMSG_ARG_OUNDEF);  
     if(access(opt->input_path,F_OK))
         put_err_msg_abort( ERRMSG_ARG_IPATH , opt->input_path);
     if(access(opt->input_path,R_OK))
@@ -30,6 +29,9 @@ void test_arg( struct ConvertOption* opt){
     if((!access(opt->output_path,F_OK))&&(!opt->force_overriding)){
         if(!file_exist_warning(opt->output_path))
             exit(0);
+    }
+    if(!opt->temp_path){
+        opt->temp_path = PNG_NAME;
     }
     if((!access(opt->temp_path,F_OK))&&(!opt->force_overriding)){
         if(!file_exist_warning(opt->temp_path))
@@ -40,7 +42,7 @@ void test_arg( struct ConvertOption* opt){
         opt->temp_path = tmpnam(NULL);
     }
 
-     if(opt->show_opt) print_opt(opt);
+     //if(opt->show_opt) print_opt(opt);
 }
 
 /*
@@ -62,14 +64,15 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring* argv
     opt->temp_path              = NULL  ;
     opt->input_path             = NULL  ;
     opt->output_path            = NULL  ;
-       opt->force_overriding       = false ;
+    //opt->print_info_msg         = false ;
+    opt->ramdom_color           = false ;
+    opt->force_overriding       = false ;
     opt->show_opt               = false ;
 
     if(argc==1){
         puts(INFO_ARG_DOHELP);
         exit(0);
     }
-
 
     while ( now_argc < argc ){
 

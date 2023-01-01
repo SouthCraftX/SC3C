@@ -20,14 +20,14 @@ void do_help(){
 }
 
 void destroy_pixel_memory( struct PNGData* png ){
-    for(ulong32 hei = 0 ; hei < png->height ; ++hei ){
-        free(png->row_ptr);
+    for(ulong32 hei = 0 ; hei < png->height ; hei++ ){
+        free(png->row_ptr[hei]);
     }
     free(png->row_ptr);
 }
 
-//#define put_err_msg( format , ...) (
- //           fprintf(stderr, format , __VA_ARGS__)
+//#define put_err_msg( format , ...) ( 
+ //           fprintf(stderr, format , __VA_ARGS__) 
  //       )
 
 
@@ -61,16 +61,15 @@ void put_debug_msg (const bool if_put  ,
         vprintf( formated_msg , arg );
     va_end(arg);
     set_console_color( CSC_WHITE );
-    return;
+    return;        
 }
-
 /*
 void print_opt(const struct ConvertOption* opt){
     set_console_color( CSC_GREEN );
     puts("=====DEBUG=====\nConvert Option:\n");
     printf("\tInput Path = %s\n\tOutput Path = %s\n\tTemp File Path = %s\n\tForce Overriding = %i\n\t"\
             "Print Info Message = %i\n\t",
-            opt->input_path , opt->output_path , opt->temp_path,
+            opt->input_path , opt->output_path , opt->temp_path, 
             opt->force_overriding  , opt->print_info_msg );
 }
 */
@@ -114,7 +113,7 @@ size_t fwriter( void* buffer , size_t nwrite ,size_t ncount ,FILE* stream  ){
 */
 int strcmp_ignore_case( ccstring str_x , ccstring str_y ){
 #ifdef _WIN32
-    return stricmp( str_x , str_y );
+    return _stricmp( str_x , str_y );
 #else
     return strcasecmp( str_x , str_y );
 #endif
