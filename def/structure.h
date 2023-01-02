@@ -1,7 +1,7 @@
 #ifndef SC3CHF_DEF_STRUCT
 #define SC3CHF_DEF_STRUCT
 
-#include "basic_types.h"
+#include "def\basic_types.h"
 
 struct ConvertOption {
     char* input_path;

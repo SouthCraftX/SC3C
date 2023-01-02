@@ -20,6 +20,7 @@
 #include "definations.h"
 #include "others.h"
 
+
 /*
     remove()
     To remove a file.
@@ -27,6 +28,10 @@
         0   = succeed
         !0  = failed
 */
+
+extern convert_option_t opt;
+extern png_data_t       png;
+
 void clean_cache( ccstring_t cache_path ){
     if(access( cache_path  , 0 )==F_OK){
         if(remove( cache_path )){
@@ -36,7 +41,8 @@ void clean_cache( ccstring_t cache_path ){
     }
 }
 
-void unzipper( const struct ConvertOption* opt ){
+void unzipper(){
+
 
     byte_t              io_buffer       [BUFFER_SIZE] ;
     unzFile             zipfile         =  NULL       ;
@@ -45,11 +51,11 @@ void unzipper( const struct ConvertOption* opt ){
     char                fname_in_zip    [FILENAME_MAX];
     //memset( fname_in_zip , 0 , sizeof(fname_in_zip));
 
-    put_info_msg( opt->print_info_msg , info_msg.unz.open_zip );
-    zipfile =  unzOpen64( opt->input_path );
+    put_info_msg( opt.print_info_msg , info_msg.unz.open_zip );
+    zipfile =  unzOpen64( opt.input_path );
 
     if( zipfile == NULL ) {
-        put_err_msg_abort( error_msg.unz.open_zip , opt->input_path );
+        put_err_msg_abort( error_msg.unz.open_zip , opt.input_path );
     }
     puts(info_msg.ok);
 
@@ -73,12 +79,12 @@ void unzipper( const struct ConvertOption* opt ){
         if(strcmp_ignore_case(fname_in_zip , PNG_NAME ))
             goto GOTOLAB_NEXTFILE;
 
-        put_info_msg(opt->print_info_msg , info_msg.unz.cur_file_open );
+        put_info_msg(opt.print_info_msg , info_msg.unz.cur_file_open );
         if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
             unzClose( zipfile );
             put_err_msg_abort( error_msg.unz.read_png );
         }
-        put_info_msg(opt->print_info_msg , info_msg.ok);
+        put_info_msg(opt.print_info_msg , info_msg.ok);
 
         if( file_info.uncompressed_size > 1024*1024 ){
             unzCloseCurrentFile( zipfile );
@@ -91,9 +97,9 @@ void unzipper( const struct ConvertOption* opt ){
             gonext_ret = unzGoToNextFile( zipfile );
     }
 
-        FILE* write_png_fptr = fopen( opt->temp_path , "wb" );
+        FILE* write_png_fptr = fopen( opt.temp_path , "wb" );
         if( !write_png_fptr ){
-            put_err_msg_abort( error_msg.unz.create_temp_file , opt->temp_path);
+            put_err_msg_abort( error_msg.unz.create_temp_file , opt.temp_path);
         }
         memset( io_buffer , 0 , BUFFER_SIZE );
         int read_n = 0 , write_n;

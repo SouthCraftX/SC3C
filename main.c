@@ -19,13 +19,13 @@
 #include "png_decoder.h"
 #include "init.h"
 
+convert_option_t opt;
+png_data_t png;
+
 int main( int argn , char* argc[]  ){
 
     do_banner();
     init();
-
-    struct ConvertOption    opt;
-    struct PNGData 	        png;
 
     //懒得单独写一个构造函数了，就直接在main()里写吧
     {
@@ -34,11 +34,11 @@ int main( int argn , char* argc[]  ){
     	png.height  = 0;
     }
 
-    arg_processor(&opt,argn,argc);
-    unzipper(&opt);
-    png_decoder(&opt,&png);
-    export_to_json(&opt,&png);
+    arg_processor(argn,argc);
+    unzipper();
+    png_decoder();
+    export_to_json();
 
-    destroy_pixel_memory(&png);
+    destroy_pixel_memory();
 }
 

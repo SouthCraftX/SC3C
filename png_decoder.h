@@ -7,12 +7,14 @@
 #include "definations.h"
 #include "others.h"
 
-void png_decoder( const struct ConvertOption* opt ,
-                  struct PNGData* png ) {
+extern convert_option_t opt;
+extern png_data_t       png;
+
+void png_decoder( ) {
 
     png_structp     png_ptr             = NULL;
     png_infop       info_ptr            = NULL;
-    FILE*           png_fptr            = fopen(opt->temp_path, "rb");
+    FILE*           png_fptr            = fopen(opt.temp_path, "rb");
 
     if(!png_fptr)
         put_err_msg_abort(error_msg.png.read);
@@ -36,10 +38,10 @@ void png_decoder( const struct ConvertOption* opt ,
     //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
 
     long32_t bit_depth,color_type;
-    png_get_IHDR( png_ptr , info_ptr , &png->width , &png->height,
+    png_get_IHDR( png_ptr , info_ptr , &png.width , &png.height,
                   &bit_depth , &color_type , NULL , NULL, NULL );
 
-    //png->num_channel = png_get_channels( png_ptr , info_ptr );
+    //png.num_channel = png_get_channels( png_ptr , info_ptr );
     //将像素格式转换为RGBA
     if ( bit_depth == 16 )
         png_set_strip_16( png_ptr ); //要求位深度强制8bit
@@ -60,33 +62,32 @@ void png_decoder( const struct ConvertOption* opt ,
     //更新图像信息
     png_read_update_info(png_ptr, info_ptr);
 
-    png->row_ptr = (png_bytep *)malloc( sizeof(png_bytep) * png->height);
+    png.row_ptr = (png_bytep *)malloc( sizeof(png_bytep) * png.height);
 
-    for (ulong32_t y = 0; y < png->height; y++) {
-        png->row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, info_ptr));
+    for (ulong32_t y = 0; y < png.height; y++) {
+        png.row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, info_ptr));
     }//这样写有个弊端：1-没有检查是否分配成功（但如果在for循环里检查会大幅度降低性能）2-容易加剧内存碎片化 。上述问题将在后续版本用内存池解决。
-    png_read_image( png_ptr, png->row_ptr);
+    png_read_image( png_ptr, png.row_ptr);
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     fclose( png_fptr );
 
 }
 
-void export_to_json(  const struct ConvertOption* opt,
-                      struct PNGData* png){
+void export_to_json(){
 
-    FILE* json_fptr = fopen( opt->output_path , "w" );
+    FILE* json_fptr = fopen( opt.output_path , "w" );
     if( !json_fptr ){
-        destroy_pixel_memory(png);
-        put_err_msg_abort( error_msg.write_json.write , opt->output_path);
+        destroy_pixel_memory();
+        put_err_msg_abort( error_msg.write_json.write , opt.output_path);
     }
     fputc('[',json_fptr);
    //ugly
-    for( ulong32_t hei = 0 ; hei < png->height ; ++hei ) {
-        for( ulong32_t wid = 0 ; wid < png->width ; ++wid ){
+    for( ulong32_t hei = 0 ; hei < png.height ; ++hei ) {
+        for( ulong32_t wid = 0 ; wid < png.width ; ++wid ){
             fprintf(  json_fptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
-                      png->row_ptr[hei][wid*4],png->row_ptr[hei][wid*4+1],
-                      png->row_ptr[hei][wid*4+2],png->row_ptr[hei][wid*4+3]);
+                      png.row_ptr[hei][wid*4],png.row_ptr[hei][wid*4+1],
+                      png.row_ptr[hei][wid*4+2],png.row_ptr[hei][wid*4+3]);
         }
    }
    fseek(json_fptr , -1 , SEEK_CUR );

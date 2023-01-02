@@ -23,11 +23,14 @@ void do_banner(){
     puts(banner_text);
 }
 
-void destroy_pixel_memory( struct PNGData* png ){
-    for(ulong32_t hei = 0 ; hei < png->height ; hei++ ){
-        free(png->row_ptr[hei]);
+extern convert_option_t opt;
+extern png_data_t       png;
+
+void destroy_pixel_memory( ){
+    for(ulong32_t hei = 0 ; hei < png.height ; hei++ ){
+        free(png.row_ptr[hei]);
     }
-    free(png->row_ptr);
+    free(png.row_ptr);
 }
 
 //#define put_err_msg( format , ...) ( 

@@ -8,7 +8,9 @@
 #include "others.h"
 #include "lang.h"
 
-void test_arg( struct ConvertOption* opt){
+extern convert_option_t opt;
+
+void test_arg(){
 /*
     access(path,F_OK)
     Detect the existence of a file.
@@ -17,29 +19,29 @@ void test_arg( struct ConvertOption* opt){
 
 */
 
-    if(!opt->input_path)                            //检查源文件路径是否为空
+    if(!opt.input_path)                            //检查源文件路径是否为空
         put_err_msg_abort( error_msg.arg.input_path_undef );
-    if(!opt->output_path)                           //检查目标文件路径是否为空
+    if(!opt.output_path)                           //检查目标文件路径是否为空
         put_err_msg_abort( error_msg.arg.output_path_undef );  
-    if(access(opt->input_path,F_OK))                //检查源文件路径是否存在
-        put_err_msg_abort( error_msg.arg.bad_path , opt->input_path );
-    if(access(opt->input_path,R_OK))                //检查源文件是否可读
-        put_err_msg_abort( error_msg.arg.permission_denied , opt->input_path );
-    if((!access(opt->output_path,F_OK))&&(!opt->force_overriding)){  //检查目标文件是否存在
-        if(!file_exist_warning(opt->output_path))
+    if(access(opt.input_path,F_OK))                //检查源文件路径是否存在
+        put_err_msg_abort( error_msg.arg.bad_path , opt.input_path );
+    if(access(opt.input_path,R_OK))                //检查源文件是否可读
+        put_err_msg_abort( error_msg.arg.permission_denied , opt.input_path );
+    if((!access(opt.output_path,F_OK))&&(!opt.force_overriding)){  //检查目标文件是否存在
+        if(!file_exist_warning(opt.output_path))
             exit(0);
     }
-    if(!opt->temp_path){                            //检查临时文件是否被指定
+    if(!opt.temp_path){                            //检查临时文件是否被指定
         remove(DEFAULT_CACHE_PATH);
-        opt->temp_path = DEFAULT_CACHE_PATH;
+        opt.temp_path = DEFAULT_CACHE_PATH;
         return;                                     //跳过剩余的临时文件路径检查
     }
-    if((!access(opt->temp_path,F_OK))&&(!opt->force_overriding)){
-        if(!file_exist_warning(opt->temp_path))
+    if((!access(opt.temp_path,F_OK))&&(!opt.force_overriding)){
+        if(!file_exist_warning(opt.temp_path))
             exit(0);
     }
 
-     //if(opt->show_opt) print_opt(opt);
+     //if(opt.show_opt) print_opt(opt);
 }
 
 /*
@@ -55,16 +57,16 @@ void arg_set_path( cstring_t* src , cstring_t* dst , ccstring_t arg,
     (*now_argc_ptr)+=2;
 }
 
-void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring_t* argv ){
+void  arg_processor( const int argc ,  cstring_t* argv ){
 
     int now_argc                = 1     ;
-    opt->temp_path              = NULL  ;
-    opt->input_path             = NULL  ;
-    opt->output_path            = NULL  ;
-    opt->print_info_msg         = true  ;
-    opt->ramdom_color           = false ;
-    opt->force_overriding       = false ;
-    opt->show_opt               = false ;
+    opt.temp_path              = NULL  ;
+    opt.input_path             = NULL  ;
+    opt.output_path            = NULL  ;
+    opt.print_info_msg         = true  ;
+    opt.ramdom_color           = false ;
+    opt.force_overriding       = false ;
+    opt.show_opt               = false ;
 
     if(argc==1){
         puts(info_msg.arg_do_help);
@@ -76,24 +78,24 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring_t* ar
         if((argv[now_argc][0]=='-')&&(strlen(argv[now_argc])==2)){
             switch( argv[now_argc][1] ){
                 case 'i':
-                    arg_set_path(&argv[now_argc+1],&opt->input_path,"-i",&now_argc,&argc);
+                    arg_set_path(&argv[now_argc+1],&opt.input_path,"-i",&now_argc,&argc);
                     break;
                 case 'o':
-                    arg_set_path(&argv[now_argc+1],&opt->output_path,"-o",&now_argc,&argc);
+                    arg_set_path(&argv[now_argc+1],&opt.output_path,"-o",&now_argc,&argc);
                     break;
                 case 'y':
-                    opt->force_overriding = true ;
+                    opt.force_overriding = true ;
                     ++now_argc;
                     break;
                 case 't':
-                    arg_set_path(&argv[now_argc+1],&opt->temp_path,"-t",&now_argc,&argc);
+                    arg_set_path(&argv[now_argc+1],&opt.temp_path,"-t",&now_argc,&argc);
                     break;
                 case 'r':
-                    opt->ramdom_color = true;
+                    opt.ramdom_color = true;
                     ++now_argc;
                     break;
                 case 'e':
-                    opt->print_info_msg = false;
+                    opt.print_info_msg = false;
                     ++now_argc;
                     break;
                 case 'h':
@@ -101,7 +103,7 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring_t* ar
                     ++now_argc;
                     break;
                 case 'p':
-                    opt->show_opt = true;
+                    opt.show_opt = true;
                     ++now_argc;
                     break;
                 default:
@@ -117,32 +119,32 @@ void  arg_processor( struct ConvertOption* opt , const int argc ,  cstring_t* ar
     }
 /*
         if( !strcmp( argv[now_argc] , "-i" )){
-            opt->input_path = argv[now_argc+1];
+            opt.input_path = argv[now_argc+1];
             now_argc+=2;
             continue;
         }
         if(!strcmp( argv[now_argc] , "-o" )){
-            opt->output_path = argv[now_argc+1];
+            opt.output_path = argv[now_argc+1];
             now_argc+=2;
             continue;
         }
         if(!strcmp( argv[now_argc] , "-t" )){
-            opt->output_path = argv[now_argc+1];
+            opt.output_path = argv[now_argc+1];
             now_argc+=2;
             continue;
         }
         if(!strcmp( argv[now_argc] , "-y" )){
-            opt->force_overwriting = true ;
+            opt.force_overwriting = true ;
             ++now_argc;
             continue;
         }
         if(!strcmp( argv[now_argc] , "-r" )){
-            opt->ramdom_color = true;
+            opt.ramdom_color = true;
             ++now_argc;
             continue;
         }
         if(!strcmp( argv[now_argc] , "-e" )){
-            opt->print_error_msg_only = true;
+            opt.print_error_msg_only = true;
             continue;
         }
 
