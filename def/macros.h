@@ -6,4 +6,7 @@
 #define PNG_NAME                ("noteColors.png")
 #define DEFAULT_ALPHA           (255)
 
+#define LANG_EN                 (0)
+#define LANG_ZH                 (1)
+
 #endif //#ifndef SC3CHF_DEF_MACRO

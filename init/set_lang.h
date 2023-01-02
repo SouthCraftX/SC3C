@@ -1,9 +1,9 @@
 #ifndef SC3CHF_INIT_LANG
 #define SC3CHF_INIT_LANG
 #include "lang.h"
-#ifdef LANG_ZH_CN
+//#include "init\auto_lang.h"
 
-void lang_init(){
+void set_lang_zh(){
 
     info_msg.unz.clean_cache    =  "清理缓存...";
     info_msg.unz.open_zip       =  "打开源文件...";
@@ -17,8 +17,6 @@ void lang_init(){
 
     info_msg.png.initdec        =  "初始化PNG解码器...\n";
     info_msg.png.alloc          =  "为解码后数据分配内存...\n";
-
-
 
     error_msg.write_json.coltm   =   "颜色配置太多！颜色数量最多为655,35种！\n";
     error_msg.write_json.create  =   "%s:无法创建JSON文件！";
@@ -46,9 +44,7 @@ void lang_init(){
     error_msg.arg.output_path_undef       =   "未指定输出文件路径！\n";
 }
 
-#else
-
-void lang_init(){
+void set_lang_en(){
 
     info_msg.unz.clean_cache    =  "Cleaning cache ...";
     info_msg.unz.open_zip       =  "Opening the source file ...";
@@ -93,7 +89,7 @@ void lang_init(){
 }
 
 
-#endif //#ifdef SC3CHF_INIT_LANG
+//#endif //#ifdef SC3CHF_INIT_LANG
 
 
 #endif //#ifndef SC3CHF_INIT_LANG
