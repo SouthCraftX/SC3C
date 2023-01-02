@@ -1,0 +1,176 @@
+//#define TEMP_PNG_FILE "TEMP\\ColorConfigurationConversion\\_____color_____.png"
+
+//#define NUM_RAMDOM_CHANGES 233
+
+/*
+void Construct_ResPackArchive( struct _ResPackArchive* _struct , char* zip_path ){
+    _struct->archive        = NULL;
+    _struct->zip_path        = zip_path;
+    _struct->zip_png_path   = "noteColors.png";
+    _struct->error_code     = 0;
+    _struct->png_fileptr    = NULL;
+};
+
+void Construct_PNGData( struct _PNGData* _struct ){
+    _struct->temp_png_path = TEMP_PNG_FILE ;
+    _struct->pixel_red     = NULL ;
+    _struct->pixel_green   = NULL ;
+    _struct->pixel_blue    = NULL ;
+    _struct->pixel_alpha   = NULL ;
+    _struct->m_width       = 0 ;
+    _struct->m_height      = 0 ;
+    _struct->color_type    = 0 ;
+    _struct->num_channel   = 0 ;
+    _struct->num_pixel     = 0 ;
+}
+*/
+
+/*
+bool UnzipPNGFile( struct _ResPackArchive* _archive ){
+
+    if( access( _archive->zip_path , F_OK) != -1){
+        goto ContinueRun;
+    }
+    else{
+        printf("%s is not exist." , _archive->zip_path );
+        exit( NoDirFile );
+    }
+
+    ContinueRun:
+
+    _archive->archive = zip_open(  _archive->zip_path , ZIP_RDONLY , &(_archive->error_code));
+    if( _archive->archive == NULL ){
+        //char error_message[2048];
+        //sprintf( error_message , "Failed to open %s . Error = %d.\n" , _archive->zip_path , _archive->error_code  );
+        fprintf( stderr , "Failed to open %s . Error = %d.\n" , _archive->zip_path , _archive->error_code );
+        exit( OpenZipFailed );
+    }
+    printf( "%s is successfully opened.\n" , _archive->zip_path );
+
+    zip_file_t* png_fileptr;
+    png_fileptr = zip_fopen(_archive->archive ,  _archive->zip_png_path , ZIP_FL_COMPRESSED);
+
+    if( png_fileptr == NULL){
+        fprintf( stderr , "Failed to open %s in %s.The resource pack may not include color configurations.\n", _archive->zip_png_path , _archive->zip_path );
+        zip_close( _archive->archive );
+        exit( OpenPNGFailed );
+    }
+    printf("%s\\%s is successfully opened.\n",_archive->zip_path,_archive->zip_png_path);
+
+    FILE* local_png = fopen( TEMP_PNG_FILE , "w+" );
+    if( local_png == NULL ){
+        fprintf( stderr , "Failed to create temporary file:%s" , TEMP_PNG_FILE );
+        zip_fclose( png_fileptr );
+        zip_close( _archive->archive );
+        exit( CreateFile );
+    }
+
+    int index = zip_name_locate( _archive->archive , _archive->zip_png_path , ZIP_FL_ENC_GUESS );
+    zip_stat_t png_stat;
+    zip_stat_index(_archive->archive,index, ZIP_FL_UNCHANGED, &png_stat);
+    
+    byte buffer[png_stat.size];
+    memset( buffer , 0 , sizeof(buffer) );
+    size_t read_size = zip_fread( png_fileptr  , buffer , png_stat.size );
+    fwrite( buffer , 1 , read_size , local_png );
+    fclose( local_png );
+    zip_fclose( png_fileptr );
+    zip_close( _archive->archive );
+    printf("Successfully create tempoary file.\n");
+    return OK;
+
+}
+
+
+    if( access( _archive->zip_path , F_OK) != -1){
+        goto ContinueRun;
+    }
+    else{
+        fprintf("%s is not exist." , _archive->zip_path );
+        exit( NoDirFile );
+    }
+
+    ContinueRun:
+
+    _archive->archive = zip_open(  _archive->zip_path , ZIP_RDONLY , &(_archive->error_code));
+    if( _archive->archive == NULL ){
+        fprintf( stderr , ("Failed to open %s . Error = %d.\n" , _archive->zip_path , _archive->error_code ));
+        exit( OpenZipFailed );
+    }
+    printf( "%s is successfully opened.\n" , _archive->zip_path );
+
+    zip_file_t* png_fileptr;
+    png_fileptr = zip_fopen(_archive->archive ,  _archive->zip_png_path , ZIP_FL_COMPRESSED);
+
+    if( png_fileptr == NULL){
+        fprintf( stderr , "Failed to open %s in %s.\n", _archive->zip_png_path , _archive->zip_path );
+        zip_close( _archive->archive );
+        exit( OpenPNGFailed );
+    }
+    printf("%s\\%s is successfully opened.\n",_archive->zip_path,_archive->zip_png_path);
+
+    FILE* LocalPNG = fopen( TEMP_PNG_FILE , "w+" );
+    if( LocalPNG == NULL ){
+        fprintf( stderr , "Failed to create temporary file:%s" , TEMP_PNG_FILE );
+        zip_fclose( png_fileptr );
+        zip_close( _archive->archive );
+        exit( CreateFile );
+    }
+
+    int index = zip_name_locate( _archive->archive , _archive->zip_png_path , ZIP_FL_ENC_GUESS );
+    zip_stat_t PNG_stat;
+    zip_stat_index(_archive->archive,index, ZIP_FL_UNCHANGED, &PNG_stat);
+    
+    byte buffer[PNG_stat.size];
+    memset( buffer , 0 , sizeof(buffer) );
+    size_t read_size = zip_fread( _archive->archive , buffer , PNG_stat.size );
+    fwrite( buffer , 1 , read_size , LocalPNG );
+    fclose( LocalPNG );
+    zip_fclose( png_fileptr );
+    zip_close( _archive->archive );
+    printf("Successfully create tempoary file.\n");
+    return OK;
+
+}
+*/
+
+/*
+    png->pixel_red       = (byte*)malloc(png->num_pixel);
+	png->pixel_green     = (byte*)malloc(png->num_pixel);
+	png->pixel_blue      = (byte*)malloc(png->num_pixel);
+    png->pixel_alpha     = (byte*)malloc(png->num_pixel);
+
+    if( png->num_channel == 4 ){
+        for(int height = 0; height < png->m_height; height++){
+            for(int width = 0; width < (4 * png->m_width); width += 4){
+                png->pixel_blue [width*height] = row_pointers[height][width + 2]; // blue
+                png->pixel_green[width*height] = row_pointers[height][width + 1]; // green
+                png->pixel_red  [width*height] = row_pointers[height][width];   // red
+                png->pixel_alpha[width*height] = row_pointers[height][width + 3]; // alpha
+            }
+        }
+    }
+    else if( png->num_channel == 3 ){
+        for(int height = 0; height < png->m_height; height++){
+            for(int width = 0; width < (4 * png->m_width); width += 4){
+                png->pixel_blue   = row_pointers[height][width + 2]; // blue
+                png->pixel_green  = row_pointers[height][width + 1]; // green
+                png->pixel_red    = row_pointers[height][width];   // red
+                png->pixel_alpha[width*height] = DEFAULT_ALPHA ;
+            }
+        }
+    }
+    else{
+        fprintf( stderr , "Wrong number of colour channels:%i",png->num_channel);
+    }
+    */
+
+    
+            //for( int l = 0; l< file_info.uncompressed_size ; ++l){
+        //    printf("%c ",*(io_buffer+l));
+        //}
+
+        //if( !writepng( io_buffer , file_info.uncompressed_size ,1, write_png_fptr ))
+           // QUITMSG( "Failed to write temporary file." );
+
+        //size_t write_ret = writepng( io_buffer , file_info.uncompressed_size , 1, write_png_fptr );
