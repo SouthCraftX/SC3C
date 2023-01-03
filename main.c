@@ -24,8 +24,8 @@ png_data_t png;
 
 int main( int argn , char* argc[]  ){
 
-    do_banner();
     init();
+    do_banner();
 
     //懒得单独写一个构造函数了，就直接在main()里写吧
     {
