@@ -2,3 +2,5 @@
 release
 *.exe
 *.zip
+*.7z
+*.stackdump

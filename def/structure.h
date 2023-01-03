@@ -7,7 +7,6 @@ struct ConvertOption {
     char* input_path;
     char* output_path;
     char* temp_path;
-    lang_id_t lang : 1;
     bool  print_info_msg : 1;
     bool  force_overriding : 1;
     bool  ramdom_color : 1;

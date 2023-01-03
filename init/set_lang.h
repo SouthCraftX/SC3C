@@ -42,6 +42,24 @@ void set_lang_zh(){
     error_msg.arg.loss                    =   "%i:参数缺失！\n";
     error_msg.arg.input_path_undef        =   "未指定源文件路径！\n";
     error_msg.arg.output_path_undef       =   "未指定输出文件路径！\n";
+
+    banner_text =   "South Craft颜色配置转换器\n"
+                    "软件作者: South Craft\n"
+                    "版本: SC3C Alpha 3.2\n"
+                    "Github: https://github.com/SouthCraftX/SC3C\n";
+
+    help_text = "使用方法: sc3c.exe -i <源文件路径> -o <输出文件路径> [可选参数]\n\n"
+                "必填参数：\n"
+                "  -i\t指定UMP资源包路径\n"
+                "  -o\t指定输出JSON路径\n"
+                "可选参数：\n"
+                "  -h\t显示帮助页面（即本界面）\n"
+                "  -t\t指定临时文件路径\n"
+                "  -y\t若JSON已存在则直接覆盖\n"
+                "  -r\t随机颜色顺序（当前版本不可用）\n"
+                "  -e\t转换时仅显示错误信息\n";
+
+    WARN_OVERRIDE  = "警告：%s已存在，要覆盖它吗？(y/n)：";
 }
 
 void set_lang_en(){
@@ -86,7 +104,23 @@ void set_lang_en(){
     error_msg.arg.input_path_undef        =   "Source file is not specifiesed!\n";
     error_msg.arg.output_path_undef       =   "Output file is not specifiesed!\n";
 
-}
+    banner_text =   "SC3C\n"
+                    "Author: South Craft\n"
+                    "Version: SC3C Alpha 3.2\n"
+                    "Github: https://github.com/SouthCraftX/SC3C";
+
+    help_text   =   "\n\nUsage: sc3c.exe -i <path/to/zip> -o <path/to/json> [Optional Parameters]\n\n"
+                    " Required Parameters:\n"
+                    "  -i\tSpecifies the path to resourcepack.\n"
+                    "  -o\tSpecifies the path to JSON file.\n"
+                    " Optional Parameters:\n"
+                    "  -t\tSpecifies the path to temporary file.\n"
+                    "  -y\tOverwrite the JSON file without asking.\n"
+                    "  -r\tRandomise the colour order.(Not available now)\n"
+                    "  -e\tDon't show non-error messages while converting.\n";
+
+    WARN_OVERRIDE  = "Warning: %s is already exist.Override?(y/n):";
+}       
 
 
 //#endif //#ifdef SC3CHF_INIT_LANG
