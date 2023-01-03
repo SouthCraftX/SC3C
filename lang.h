@@ -70,6 +70,6 @@ struct
 
 } info_msg;
 
-ccstring_t banner_text,help_text,WARN_OVERRIDE;
+cstring_t banner_text,help_text,WARN_OVERRIDE;
 
 #endif // #ifdef SC3CHF_LANG
