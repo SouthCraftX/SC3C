@@ -12,6 +12,10 @@
 
 extern convert_option_t opt;
 
+/*  
+    @get_sys_lang() :   当语言是中文时返回LANG_ZH
+                        不是中文或无法检测返回LANG_EN
+*/
 #ifdef _WIN32
 lang_id_t get_sys_lang(){
     LANGID lang = GetUserDefaultUILanguage();
@@ -22,7 +26,9 @@ lang_id_t get_sys_lang(){
 #else
 lang_id_t get_sys_lang(){
     //简体中文系统上：zh_CN.UTF-8
-    return (!strncmp(getenv("LANG"),"zh",(ulong32_t)2))?LANG_ZH:LANG_EN;
+    cstring_t lang_token = getenv("LANG");
+    if(!lang_token) return LANG_EN;
+    return (!strncmp(lang_token,"zh",(ulong32_t)2))?LANG_ZH:LANG_EN;
 }
 #endif
 

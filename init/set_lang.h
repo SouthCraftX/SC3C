@@ -11,7 +11,7 @@ void set_lang_zh(){
     info_msg.unz.cur_file_info  =  "获取UMP颜色配置文件信息...";
     info_msg.unz.cur_file_open  =  "打开UMP颜色配置文件...";
 
-    info_msg.arg_do_help        =  "Run 'SC3C -h' to get help.\n";
+    info_msg.arg_do_help        =  "运行'SC3C -h'以获得帮助页面\n";
     info_msg.ok                 =  "成功\n";
     info_msg.no_override        =  "已取消文件覆盖，SC3C正在退出...\n";
 

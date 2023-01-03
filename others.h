@@ -20,6 +20,7 @@ void do_help(){
 }
 
 void do_banner(){
+
     puts(banner_text);
 }
 
@@ -46,7 +47,7 @@ void put_err_msg_abort( ccstring_t format , ...){
     vfprintf( stderr , format  , arg);
     set_console_color(cmd_text_color.white);
     va_end(arg);
-    abort();
+    exit(-1);
 }
 
 void put_info_msg( const bool if_put  ,
