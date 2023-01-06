@@ -152,7 +152,7 @@ void set_lang_en(){
     banner_text =   "SC3C\n"
                     "Author: South Craft\n"
                     "Version: SC3C Alpha 3.5.2\n"
-                    "Github: https://github.com/SouthCraftX/SC3C"
+                    "Github: https://github.com/SouthCraftX/SC3C\n"
                     "This is free software under the GNU General Public License v3."
                     "You are allowed to freely distribute, modify, and use the software under this license."
                     "Visit the following website to learn more:"
