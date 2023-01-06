@@ -89,7 +89,9 @@ void set_lang_zh(){
     banner_text =   "South Craft颜色配置转换器\n"
                     "软件作者: South Craft\n"
                     "版本: SC3C Alpha 3.2\n"
-                    "Github: https://github.com/SouthCraftX/SC3C\n";
+                    "Github: https://github.com/SouthCraftX/SC3C\n"
+                    "这是在GNU通用公共许可证第三版下的自由软件。在此许可证下，允许您在下自由地分发、修改、使用这款软件。\n"
+                    "欲了解更多，请访问：https://www.gnu.org/licenses/gpl-3.0.en.html";
 
     help_text = "使用方法: sc3c.exe -i <源文件路径> -o <输出文件路径> [可选参数]\n\n"
                 "必填参数：\n"
@@ -150,7 +152,11 @@ void set_lang_en(){
     banner_text =   "SC3C\n"
                     "Author: South Craft\n"
                     "Version: SC3C Alpha 3.2\n"
-                    "Github: https://github.com/SouthCraftX/SC3C";
+                    "Github: https://github.com/SouthCraftX/SC3C"
+                    "This is free software under the GNU General Public License v3."
+                    "You are allowed to freely distribute, modify, and use the software under this license."
+                    "Visit the following website to learn more:"
+                    "https://www.gnu.org/licenses/gpl-3.0.en.html";
 
     help_text   =   "\n\nUsage: sc3c.exe -i <path/to/zip> -o <path/to/json> [Optional Parameters]\n\n"
                     " Required Parameters:\n"
