@@ -29,7 +29,7 @@ void ramdom_color_order(){
     srand(time(0));
     ulong32_t tmp;
 
-    for(ulong32_t n ; n < MAX_RAMDOM_NUM ; ++n ){
+    for(ulong32_t n = 0 ; n < MAX_RAMDOM_NUM ; ++n ){
         ulong32_t dst_x = rand() %  png.width  ,  //必须这么写，因为多次malloc导致内存不连续
                   dst_y = rand() %  png.height ,
                   src_x = rand() %  png.width  ,
