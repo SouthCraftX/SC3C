@@ -53,7 +53,7 @@ struct ConvertOption {
     bool  force_overriding : 1;
     bool  ramdom_color : 1;
     bool  no_cleaning : 1;
-    bool  show_opt : 1 ;   
+    //bool  show_opt : 1 ;   
 };
 
 

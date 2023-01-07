@@ -66,6 +66,7 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 #include "argvpro.h"
 #include "png_unzipper.h"
 #include "png_decoder.h"
+#include "ramdom_color_order.h"
 #include "init.h"
 
 convert_option_t opt;
@@ -86,6 +87,10 @@ int main( int argn , char* argc[]  ){
     arg_processor(argn,argc);
     unzipper();
     png_decoder();
+
+    if(opt.ramdom_color)
+        ramdom_color_order();
+
     export_to_json();
 
     destroy_pixel_memory();

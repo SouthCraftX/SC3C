@@ -64,6 +64,7 @@ struct
         ccstring_t initdec;
         ccstring_t decode;
         ccstring_t read;
+        ccstring_t alloc;
     } png;
 
     struct

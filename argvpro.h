@@ -117,7 +117,7 @@ void  arg_processor( const int argc ,  cstring_t* argv ){
     opt.print_info_msg         = true  ;
     opt.ramdom_color           = false ;
     opt.force_overriding       = false ;
-    opt.show_opt               = false ;
+    //opt.show_opt               = false ;
 
     if(argc==1){
         puts(info_msg.arg_do_help);
@@ -153,10 +153,10 @@ void  arg_processor( const int argc ,  cstring_t* argv ){
                     do_help();
                     ++now_argc;
                     break;
-                case 'p':
+        /*        case 'p':
                     opt.show_opt = true;
                     ++now_argc;
-                    break;
+                    break; */
                 default:
                     goto GOTOLAB_INVAILD_ARG;
             }

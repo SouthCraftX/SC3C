@@ -48,6 +48,8 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 #define PNG_NAME                ("noteColors.png")
 #define DEFAULT_ALPHA           (255)
 
+#define MAX_RAMDOM_NUM          (128)
+
 #define LANG_EN                 (0)
 #define LANG_ZH                 (1)
 

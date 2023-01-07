@@ -55,6 +55,7 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 
 #include <png.h>
 #include <stdio.h>
+#include <limits.h>
 
 #include "definations.h"
 #include "others.h"
@@ -114,11 +115,24 @@ void png_decoder( ) {
     //更新图像信息
     png_read_update_info(png_ptr, info_ptr);
 
+
+    long64_t test_is_nullptr = 1;
     png.row_ptr = (png_bytep *)malloc( sizeof(png_bytep) * png.height);
 
+    test_is_nullptr = (test_is_nullptr&&png.row_ptr);
+    if(!test_is_nullptr) 
+        goto GOTOLAB_PNG_NULPTR;
+    
     for (ulong32_t y = 0; y < png.height; y++) {
         png.row_ptr[y] = (png_byte *)malloc(png_get_rowbytes(png_ptr, info_ptr));
-    }//这样写有个弊端：1-没有检查是否分配成功（但如果在for循环里检查会大幅度降低性能）2-容易加剧内存碎片化 。上述问题将在后续版本用内存池解决。
+        test_is_nullptr = (test_is_nullptr&&png.row_ptr[y]);
+    }
+    if(!test_is_nullptr){
+        GOTOLAB_PNG_NULPTR:
+            put_err_msg_abort( error_msg.png.alloc );
+    }
+        
+
     png_read_image( png_ptr, png.row_ptr);
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);

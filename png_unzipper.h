@@ -153,11 +153,11 @@ void unzipper(){
             put_err_msg_abort( error_msg.unz.create_temp_file , opt.temp_path);
         }
         memset( io_buffer , 0 , BUFFER_SIZE );
-        int read_n = 0 , write_n;
+        int read_n = 0;
         for(int remain_size = file_info.uncompressed_size ; remain_size>0 ; remain_size-= BUFFER_SIZE )
         {
             read_n =  unzReadCurrentFile( zipfile , io_buffer , BUFFER_SIZE );
-            write_n = fwrite( io_buffer , 1 , read_n , write_png_fptr );
+            fwrite( io_buffer , 1 , read_n , write_png_fptr );
         }
         fclose(write_png_fptr);
         unzCloseCurrentFile( zipfile );

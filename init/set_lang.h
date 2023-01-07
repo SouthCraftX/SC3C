@@ -77,7 +77,8 @@ void set_lang_zh(){
 
     error_msg.png.initdec    =   "初始化PNG解码器失败！\n";
     error_msg.png.decode     =   "解码PNG时发生错误！\n";
-    error_msg.png.read       =   "创建临时文件失败！";
+    error_msg.png.read       =   "创建临时文件失败！\n";
+    error_msg.png.alloc      =   "内存不足！\n";
 
     error_msg.arg.invaild                 =   "%s:无此参数！\n";
     error_msg.arg.bad_path                =   "%s:没有那个文件或目录！\n";
@@ -88,7 +89,7 @@ void set_lang_zh(){
 
     banner_text =   "South Craft颜色配置转换器\n"
                     "软件作者: South Craft\n"
-                    "版本: SC3C Alpha 3.5.2\n"
+                    "版本: SC3C 1 预发布版\n"
                     "Github: https://github.com/SouthCraftX/SC3C\n"
                     "这是在GNU通用公共许可证第三版下的自由软件。在此许可证下，允许您在下自由地分发、修改、使用这款软件。\n"
                     "欲了解更多，请访问：https://www.gnu.org/licenses/gpl-3.0.en.html";
@@ -101,7 +102,7 @@ void set_lang_zh(){
                 "  -h\t显示帮助页面（即本界面）\n"
                 "  -t\t指定临时文件路径\n"
                 "  -y\t若JSON已存在则直接覆盖\n"
-                "  -r\t随机颜色顺序（当前版本不可用）\n"
+                "  -r\t随机颜色顺序（当前版本已支持）\n"
                 "  -e\t转换时仅显示错误信息\n";
 
     WARN_OVERRIDE  = "警告：%s已存在，要覆盖它吗？(y/n)：";
@@ -125,7 +126,7 @@ void set_lang_en(){
 
 
     error_msg.write_json.coltm   =   "颜色配置太多！颜色数量最多为655,35种！\n";
-    error_msg.write_json.create  =   "%s:Failed to create JSON file.";
+    error_msg.write_json.create  =   "%s:Failed to create JSON file.\n";
     error_msg.write_json.write   =   "%s:Failed to write the JSON file.\n";
 
     error_msg.unz.clean_cache        =   "Failed to clean cache,please delete %s.\n";
@@ -140,7 +141,8 @@ void set_lang_en(){
 
     error_msg.png.initdec    =   "Failed to initialise PNG decoder.\n";
     error_msg.png.decode     =   "An error occurred while decoding the PNG.\n";
-    error_msg.png.read       =   "Failed to read temperory file.";
+    error_msg.png.read       =   "Failed to read temperory file.\n";
+    error_msg.png.alloc      =   "Out of memory.\n";
 
     error_msg.arg.invaild                 =  "%s:No such a argument!\n";
     error_msg.arg.bad_path                =   "%s:No such a file or directory.\n";
@@ -151,7 +153,7 @@ void set_lang_en(){
 
     banner_text =   "SC3C\n"
                     "Author: South Craft\n"
-                    "Version: SC3C Alpha 3.5.2\n"
+                    "Version: SC3C 1 Pre-release\n"
                     "Github: https://github.com/SouthCraftX/SC3C\n"
                     "This is free software under the GNU General Public License v3."
                     "You are allowed to freely distribute, modify, and use the software under this license."
@@ -165,7 +167,7 @@ void set_lang_en(){
                     " Optional Parameters:\n"
                     "  -t\tSpecifies the path to temporary file.\n"
                     "  -y\tOverwrite the JSON file without asking.\n"
-                    "  -r\tRandomise the colour order.(Not available now)\n"
+                    "  -r\tRandomise the colour order.(AVAILABLE now!)\n"
                     "  -e\tDon't show non-error messages while converting.\n";
 
     WARN_OVERRIDE  = "Warning: %s is already exist.Override?(y/n):";
