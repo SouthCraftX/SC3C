@@ -72,6 +72,7 @@ void png_decoder( ) {
     if(!png_fptr)
         put_err_msg_abort(error_msg.png.read);
 
+    put_info_msg( info_msg.png.initdec );
     png_ptr = png_create_read_struct( PNG_LIBPNG_VER_STRING, NULL , NULL , NULL );
     if( png_ptr == NULL )
         put_err_msg_abort( error_msg.png.initdec);
@@ -81,6 +82,8 @@ void png_decoder( ) {
         png_destroy_read_struct(&png_ptr,NULL,NULL);
         put_err_msg_abort(  error_msg.png.initdec );
     }
+    put_info_msg( info_msg.ok );
+
     int png_error_code = setjmp( png_jmpbuf( png_ptr ) );
     if( png_error_code )
         put_err_msg_abort( error_msg.png.decode , png_error_code);
@@ -90,9 +93,14 @@ void png_decoder( ) {
     png_read_info( png_ptr, info_ptr );
     //png_read_png( png_ptr, info_ptr , PNG_TRANSFORM_EXPAND , NULL );
 
+    put_info_msg( info_msg.png.get_info );
     long32_t bit_depth,color_type;
-    png_get_IHDR( png_ptr , info_ptr , &png.width , &png.height,
-                  &bit_depth , &color_type , NULL , NULL, NULL );
+    if(!png_get_IHDR( png_ptr , info_ptr , &png.width , &png.height,
+                  &bit_depth , &color_type , NULL , NULL, NULL ))
+    {
+        put_err_msg_abort( error_msg.png.get_info );
+    }
+    put_info_msg( info_msg.ok );
 
     //png.num_channel = png_get_channels( png_ptr , info_ptr );
     //将像素格式转换为RGBA
@@ -117,7 +125,7 @@ void png_decoder( ) {
 
 
     long64_t test_is_nullptr = 1;
-    png.row_ptr = (png_bytep *)malloc( sizeof(png_bytep) * png.height);
+    png.row_ptr = (byte_t**)malloc( sizeof(png_bytep) * png.height );
 
     test_is_nullptr = (test_is_nullptr&&png.row_ptr);
     if(!test_is_nullptr) 
@@ -142,6 +150,7 @@ void png_decoder( ) {
 
 void export_to_json(){
 
+    
     FILE* json_fptr = fopen( opt.output_path , "w" );
     if( !json_fptr ){
         destroy_pixel_memory();

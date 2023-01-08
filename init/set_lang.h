@@ -48,18 +48,24 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 
 void set_lang_zh(){
 
-    info_msg.unz.clean_cache    =  "清理缓存...";
-    info_msg.unz.open_zip       =  "打开源文件...";
-    info_msg.unz.global_info    =  "获取源文件的全局信息...";
-    info_msg.unz.cur_file_info  =  "获取UMP颜色配置文件信息...";
-    info_msg.unz.cur_file_open  =  "打开UMP颜色配置文件...";
+    info_msg.unz.clean_cache        =  "清理缓存...";
+    info_msg.unz.open_zip           =  "打开源文件...";
+    info_msg.unz.global_info        =  "获取源文件的全局信息...";
+    info_msg.unz.cur_file_info      =  "获取UMP颜色配置文件信息...";
+    info_msg.unz.search             =  "搜索noteColors.png...";
+    info_msg.unz.found              =  "已找到\n";
+    info_msg.unz.cur_file_open      =  "打开UMP颜色配置文件...";
+    info_msg.unz.create_tmp_file    =  "创建临时文件...";
+    info_msg.unz.write_tmp_file     =  "写入临时文件...";
 
     info_msg.arg_do_help        =  "运行'SC3C -h'以获得帮助页面\n";
     info_msg.ok                 =  "成功\n";
     info_msg.no_override        =  "已取消文件覆盖，SC3C正在退出...\n";
+    info_msg.ramdom_color       =  "随机化颜色顺序...";
 
-    info_msg.png.initdec        =  "初始化PNG解码器...\n";
-    info_msg.png.alloc          =  "为解码后数据分配内存...\n";
+    info_msg.png.initdec        =  "初始化PNG解码器...";
+    info_msg.png.alloc          =  "为解码后数据分配内存...";
+    info_msg.png.get_info       =  "获取PNG信息...";
 
     error_msg.write_json.coltm   =   "颜色配置太多！颜色数量最多为655,35种！\n";
     error_msg.write_json.create  =   "%s:无法创建JSON文件！";
@@ -74,11 +80,13 @@ void set_lang_zh(){
     error_msg.unz.create_temp_file   =   "%s:创建临时文件失败！\n";
     error_msg.unz.write_temp_file    =   "%s:写入临时文件失败！\n";
     error_msg.unz.read_png           =   "读取PNG信息失败！\n";
+    error_msg.unz.no_png             =   "找不到noteColors.png！很可能该资源包不含颜色配置文件。\n";
 
     error_msg.png.initdec    =   "初始化PNG解码器失败！\n";
     error_msg.png.decode     =   "解码PNG时发生错误！\n";
     error_msg.png.read       =   "创建临时文件失败！\n";
     error_msg.png.alloc      =   "内存不足！\n";
+    error_msg.png.get_info   =   "获取PNG信息失败！\n";
 
     error_msg.arg.invaild                 =   "%s:无此参数！\n";
     error_msg.arg.bad_path                =   "%s:没有那个文件或目录！\n";
@@ -89,7 +97,7 @@ void set_lang_zh(){
 
     banner_text =   "South Craft颜色配置转换器\n"
                     "软件作者: South Craft\n"
-                    "版本: SC3C 1 预发布版\n"
+                    "版本: SC3C 1.0 稳定版\n"
                     "Github: https://github.com/SouthCraftX/SC3C\n"
                     "这是在GNU通用公共许可证第三版下的自由软件。在此许可证下，允许您在下自由地分发、修改、使用这款软件。\n"
                     "欲了解更多，请访问：https://www.gnu.org/licenses/gpl-3.0.en.html";
@@ -103,18 +111,23 @@ void set_lang_zh(){
                 "  -t\t指定临时文件路径\n"
                 "  -y\t若JSON已存在则直接覆盖\n"
                 "  -r\t随机颜色顺序（当前版本已支持）\n"
-                "  -e\t转换时仅显示错误信息\n";
+                "  -e\t转换时仅显示错误信息\n"
+                "  -s\t在转换完成后保留缓存文件";
 
     WARN_OVERRIDE  = "警告：%s已存在，要覆盖它吗？(y/n)：";
 }
 
 void set_lang_en(){
 
-    info_msg.unz.clean_cache    =  "Cleaning cache ...";
-    info_msg.unz.open_zip       =  "Opening the source file ...";
-    info_msg.unz.global_info    =  "Getting the global info of the source file ...";
-    info_msg.unz.cur_file_info  =  "Getting the info of noteColors.png ...";
-    info_msg.unz.cur_file_open  =  "Opening noteColors.png ...";
+    info_msg.unz.clean_cache        =  "Cleaning cache ...";
+    info_msg.unz.open_zip           =  "Opening the source file ...";
+    info_msg.unz.global_info        =  "Getting the global info of the source file ...";
+    info_msg.unz.cur_file_info      =  "Getting the info of noteColors.png ...";
+    info_msg.unz.cur_file_open      =  "Opening noteColors.png ...";
+    info_msg.unz.search             =  "Looking for noteColors.png ...";
+    info_msg.unz.found              =  "Found\n";
+    info_msg.unz.create_tmp_file    =  "Creating temporary file ...";
+    info_msg.unz.write_tmp_file     =  "Writing temporary file ...";
 
     info_msg.arg_do_help        =  "Run 'SC3C -h' to get help.\n";
     info_msg.ok                 =  "OK\n";
@@ -138,13 +151,15 @@ void set_lang_en(){
     error_msg.unz.create_temp_file   =   "%s:Failed to create temporary file.\n";
     error_msg.unz.write_temp_file    =   "%s:Failed to write temporary file.\n";
     error_msg.unz.read_png           =   "Failed to read the colour configure from the resource pack!\n";
+    error_msg.unz.no_png             =   "Cannot find noteColors.png!Probably the resource pack is without note-color configure.\n";
 
     error_msg.png.initdec    =   "Failed to initialise PNG decoder.\n";
     error_msg.png.decode     =   "An error occurred while decoding the PNG.\n";
     error_msg.png.read       =   "Failed to read temperory file.\n";
     error_msg.png.alloc      =   "Out of memory.\n";
+    error_msg.png.get_info   =   "Failed to get the info of the png file.\n";
 
-    error_msg.arg.invaild                 =  "%s:No such a argument!\n";
+    error_msg.arg.invaild                 =   "%s:No such a argument!\n";
     error_msg.arg.bad_path                =   "%s:No such a file or directory.\n";
     error_msg.arg.permission_denied       =   "%s:Permission denied.\n";
     error_msg.arg.loss                    =   "%i:Argument loss.\n";
@@ -153,7 +168,7 @@ void set_lang_en(){
 
     banner_text =   "SC3C\n"
                     "Author: South Craft\n"
-                    "Version: SC3C 1 Pre-release\n"
+                    "Version: SC3C 1.0 Stable\n"
                     "Github: https://github.com/SouthCraftX/SC3C\n"
                     "This is free software under the GNU General Public License v3."
                     "You are allowed to freely distribute, modify, and use the software under this license."
@@ -168,7 +183,8 @@ void set_lang_en(){
                     "  -t\tSpecifies the path to temporary file.\n"
                     "  -y\tOverwrite the JSON file without asking.\n"
                     "  -r\tRandomise the colour order.(AVAILABLE now!)\n"
-                    "  -e\tDon't show non-error messages while converting.\n";
+                    //"  -e\tDon't show non-error messages while converting.\n"
+                    "  -s\tSave the cache file instead of deleting it after convertion.\n";
 
     WARN_OVERRIDE  = "Warning: %s is already exist.Override?(y/n):";
 }       

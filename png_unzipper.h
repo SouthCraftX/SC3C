@@ -83,6 +83,7 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 extern convert_option_t opt;
 extern png_data_t       png;
 
+/*
 void clean_cache( ccstring_t cache_path ){
     if(access( cache_path  , 0 )==F_OK){
         if(remove( cache_path )){
@@ -91,9 +92,13 @@ void clean_cache( ccstring_t cache_path ){
         }
     }
 }
+*/
+
+void delete_cache(){
+    remove(opt.temp_path);
+}
 
 void unzipper(){
-
 
     byte_t              io_buffer       [BUFFER_SIZE] ;
     unzFile             zipfile         =  NULL       ;
@@ -102,22 +107,24 @@ void unzipper(){
     char                fname_in_zip    [FILENAME_MAX];
     //memset( fname_in_zip , 0 , sizeof(fname_in_zip));
 
-    put_info_msg( opt.print_info_msg , info_msg.unz.open_zip );
+    put_info_msg( info_msg.unz.open_zip );
     zipfile =  unzOpen64( opt.input_path );
 
     if( zipfile == NULL ) {
         put_err_msg_abort( error_msg.unz.open_zip , opt.input_path );
     }
-    puts(info_msg.ok);
+    put_info_msg( info_msg.ok );
 
-    //put_info_msg( )
+    put_info_msg( info_msg.unz.global_info );
     if(unzGetGlobalInfo64( zipfile , &global_info ) != UNZ_OK ){
         unzClose( zipfile );
         put_err_msg_abort( error_msg.unz.global_info );
     }
+    put_info_msg( info_msg.ok );
 
+    put_info_msg( info_msg.unz.search );
     int gonext_ret = unzGoToFirstFile( zipfile );
-
+    bool found_png = false;
     while( gonext_ret == UNZ_OK ){
         if(unzGetCurrentFileInfo64( zipfile , &file_info , fname_in_zip ,
                                     sizeof(fname_in_zip) , NULL , 0 , NULL , 0)
@@ -130,12 +137,15 @@ void unzipper(){
         if(strcmp_ignore_case(fname_in_zip , PNG_NAME ))
             goto GOTOLAB_NEXTFILE;
 
-        put_info_msg(opt.print_info_msg , info_msg.unz.cur_file_open );
+        found_png = true;
+        put_info_msg( info_msg.unz.found );
+
+        put_info_msg( info_msg.unz.cur_file_open );
         if(unzOpenCurrentFile( zipfile ) != UNZ_OK){
             unzClose( zipfile );
             put_err_msg_abort( error_msg.unz.read_png );
         }
-        put_info_msg(opt.print_info_msg , info_msg.ok);
+        put_info_msg( info_msg.ok );
 
         if( file_info.uncompressed_size > 1024*1024 ){
             unzCloseCurrentFile( zipfile );
@@ -148,18 +158,27 @@ void unzipper(){
             gonext_ret = unzGoToNextFile( zipfile );
     }
 
+        if(!found_png){
+            put_err_msg_abort( error_msg.unz.no_png );
+        }
+        
+        put_info_msg( info_msg.unz.create_tmp_file );
         FILE* write_png_fptr = fopen( opt.temp_path , "wb" );
         if( !write_png_fptr ){
-            put_err_msg_abort( error_msg.unz.create_temp_file , opt.temp_path);
+            put_err_msg_abort( error_msg.unz.create_temp_file , opt.temp_path );
         }
-        memset( io_buffer , 0 , BUFFER_SIZE );
+        put_info_msg( info_msg.ok );
+
+        //memset( io_buffer , 0 , BUFFER_SIZE );
+        put_info_msg( info_msg.unz.write_tmp_file );
         int read_n = 0;
-        for(int remain_size = file_info.uncompressed_size ; remain_size>0 ; remain_size-= BUFFER_SIZE )
+        for(int remain_size = file_info.uncompressed_size ; remain_size > 0 ; remain_size -= BUFFER_SIZE )
         {
             read_n =  unzReadCurrentFile( zipfile , io_buffer , BUFFER_SIZE );
             fwrite( io_buffer , 1 , read_n , write_png_fptr );
         }
-        fclose(write_png_fptr);
+        put_info_msg( info_msg.ok );
+        fclose( write_png_fptr );
         unzCloseCurrentFile( zipfile );
         unzClose( zipfile );
     }

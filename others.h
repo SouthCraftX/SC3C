@@ -29,7 +29,6 @@ void do_help(){
 }
 
 void do_banner(){
-
     puts(banner_text);
 }
 
@@ -59,11 +58,10 @@ void put_err_msg_abort( ccstring_t format , ...){
     exit(-1);
 }
 
-void put_info_msg( const bool if_put  ,
-                   ccstring_t format , ... ){
+void put_info_msg( ccstring_t format , ... ){
     va_list arg;
     va_start( arg , format );
-    if(if_put)
+    if(opt.print_info_msg)
         vprintf( format , arg );
     va_end(arg);
 }

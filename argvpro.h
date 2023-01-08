@@ -70,6 +70,9 @@ void test_arg(){
 
 */
 
+    if(!opt.hide_banner)
+        do_banner();
+
     if(!opt.input_path)                            //检查源文件路径是否为空
         put_err_msg_abort( error_msg.arg.input_path_undef );
     if(!opt.output_path)                           //检查目标文件路径是否为空
@@ -110,13 +113,14 @@ void arg_set_path( cstring_t* src , cstring_t* dst , ccstring_t arg,
 
 void  arg_processor( const int argc ,  cstring_t* argv ){
 
-    int now_argc                = 1     ;
+    int now_argc               = 1     ;
     opt.temp_path              = NULL  ;
     opt.input_path             = NULL  ;
     opt.output_path            = NULL  ;
     opt.print_info_msg         = true  ;
     opt.ramdom_color           = false ;
     opt.force_overriding       = false ;
+    opt.save_tmp_file          = false ;
     //opt.show_opt               = false ;
 
     if(argc==1){
@@ -168,39 +172,6 @@ void  arg_processor( const int argc ,  cstring_t* argv ){
         GOTOLAB_INVAILD_ARG:
             put_err_msg_abort(error_msg.arg.invaild,argv[now_argc]);
     }
-/*
-        if( !strcmp( argv[now_argc] , "-i" )){
-            opt.input_path = argv[now_argc+1];
-            now_argc+=2;
-            continue;
-        }
-        if(!strcmp( argv[now_argc] , "-o" )){
-            opt.output_path = argv[now_argc+1];
-            now_argc+=2;
-            continue;
-        }
-        if(!strcmp( argv[now_argc] , "-t" )){
-            opt.output_path = argv[now_argc+1];
-            now_argc+=2;
-            continue;
-        }
-        if(!strcmp( argv[now_argc] , "-y" )){
-            opt.force_overwriting = true ;
-            ++now_argc;
-            continue;
-        }
-        if(!strcmp( argv[now_argc] , "-r" )){
-            opt.ramdom_color = true;
-            ++now_argc;
-            continue;
-        }
-        if(!strcmp( argv[now_argc] , "-e" )){
-            opt.print_error_msg_only = true;
-            continue;
-        }
 
-        put_err_msg( error_msg.ARG_INVAILD ,argv[now_argc] );
-    }
-*/
     test_arg( opt );
 }

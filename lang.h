@@ -65,6 +65,7 @@ struct
         ccstring_t decode;
         ccstring_t read;
         ccstring_t alloc;
+        ccstring_t get_info;
     } png;
 
     struct
@@ -72,6 +73,7 @@ struct
         ccstring_t clean_cache;
         ccstring_t open_zip;
         ccstring_t global_info;
+        ccstring_t no_png;
         ccstring_t cur_file_info;
         ccstring_t cur_file_open;
         ccstring_t png_too_large;
@@ -95,11 +97,13 @@ struct
     ccstring_t arg_do_help;
     ccstring_t ok;
     ccstring_t no_override;
+    ccstring_t ramdom_color;
 
     struct
     {
         ccstring_t initdec;
         ccstring_t alloc;
+        ccstring_t get_info;
     } png;
 
     struct
@@ -107,9 +111,15 @@ struct
         ccstring_t clean_cache;
         ccstring_t open_zip;
         ccstring_t global_info;
+        ccstring_t search;
+        ccstring_t found;
         ccstring_t cur_file_info;
         ccstring_t cur_file_open;
+        ccstring_t create_tmp_file;
+        ccstring_t write_tmp_file;
     } unz;
+
+
 
 } info_msg;
 

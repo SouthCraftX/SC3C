@@ -15,7 +15,7 @@
 #include "definations.h"
 extern png_data_t png;
 
-#define ULONG32_SWAP(x,y,tmp)             \
+#define ULONG32_SWAP(x,y,tmp)           \
 (                                       \
     tmp = x,                            \
     x = y,                              \
@@ -24,6 +24,8 @@ extern png_data_t png;
 
 
 void ramdom_color_order(){
+
+    put_info_msg( info_msg.ramdom_color );
 
     ulong32_t** rgba_row = (ulong32_t**)png.row_ptr;
     srand(time(0));
@@ -36,6 +38,8 @@ void ramdom_color_order(){
                   src_y = rand() %  png.height ;
         ULONG32_SWAP( rgba_row[dst_y][dst_x] , rgba_row[src_y][src_x] , tmp );    
     }
+
+    put_info_msg( info_msg.ok );
 
 }
 
