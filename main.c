@@ -75,7 +75,6 @@ png_data_t png;
 int main( int argn , char* argc[]  ){
 
     init();
-
     //懒得单独写一个构造函数了，就直接在main()里写吧
     {
 	    png.row_ptr = NULL;
@@ -87,11 +86,18 @@ int main( int argn , char* argc[]  ){
     unzipper();
     png_decoder();
 
-    if(opt.ramdom_color)
+    if( opt.ramdom_color )
         ramdom_color_order();
 
     export_to_json();
 
-    destroy_pixel_memory();
+    free_pixel_memory();
+
+    if( !opt.save_tmp_file )
+        delete_cache();
+
+    set_console_color( cmd_text_color.green );
+    printf( info_msg.convert_complete , opt.output_path );
+    set_console_color( cmd_text_color.white );
 }
 

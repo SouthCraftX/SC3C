@@ -73,6 +73,9 @@ void test_arg(){
     if(!opt.hide_banner)
         do_banner();
 
+    if(opt.do_help)
+        do_help();
+
     if(!opt.input_path)                            //检查源文件路径是否为空
         put_err_msg_abort( error_msg.arg.input_path_undef );
     if(!opt.output_path)                           //检查目标文件路径是否为空
@@ -83,7 +86,7 @@ void test_arg(){
         put_err_msg_abort( error_msg.arg.permission_denied , opt.input_path );
     if((!access(opt.output_path,F_OK))&&(!opt.force_overriding)){  //检查目标文件是否存在
         if(!file_exist_warning(opt.output_path))
-            exit(0);
+            exit(-2);
     }
     if(!opt.temp_path){                            //检查临时文件是否被指定
         remove(DEFAULT_CACHE_PATH);
@@ -103,9 +106,9 @@ void test_arg(){
     dst (aka destination)
 */
 void arg_set_path( cstring_t* src , cstring_t* dst , ccstring_t arg,
-                    int* now_argc_ptr , const int* argc_ptr)
+                    int* now_argc_ptr , const int argc_ptr)
 {
-    if((*now_argc_ptr)+1 == *(argc_ptr))
+    if((*now_argc_ptr)+1 == argc_ptr)
         put_err_msg_abort( error_msg.arg.loss , arg );
     *dst = *src;
     (*now_argc_ptr)+=2;
@@ -124,8 +127,9 @@ void  arg_processor( const int argc ,  cstring_t* argv ){
     //opt.show_opt               = false ;
 
     if(argc==1){
-        puts(info_msg.arg_do_help);
-        exit(0);
+        puts( banner_text );
+        puts( info_msg.arg_do_help );
+        exit( 0 );
     }
 
     while (now_argc<argc){
@@ -133,17 +137,17 @@ void  arg_processor( const int argc ,  cstring_t* argv ){
         if((argv[now_argc][0]=='-')&&(strlen(argv[now_argc])==2)){
             switch( argv[now_argc][1] ){
                 case 'i':
-                    arg_set_path(&argv[now_argc+1],&opt.input_path,"-i",&now_argc,&argc);
+                    arg_set_path(&argv[now_argc+1],&opt.input_path,"-i",&now_argc,argc);
                     break;
                 case 'o':
-                    arg_set_path(&argv[now_argc+1],&opt.output_path,"-o",&now_argc,&argc);
+                    arg_set_path(&argv[now_argc+1],&opt.output_path,"-o",&now_argc,argc);
                     break;
                 case 'y':
                     opt.force_overriding = true ;
                     ++now_argc;
                     break;
                 case 't':
-                    arg_set_path(&argv[now_argc+1],&opt.temp_path,"-t",&now_argc,&argc);
+                    arg_set_path(&argv[now_argc+1],&opt.temp_path,"-t",&now_argc,argc);
                     break;
                 case 'r':
                     opt.ramdom_color = true;
@@ -154,7 +158,13 @@ void  arg_processor( const int argc ,  cstring_t* argv ){
                     ++now_argc;
                     break;
                 case 'h':
-                    do_help();
+                    {
+                        opt.do_help = true;
+                        ++now_argc;
+                        break;
+                    }
+                case 's':
+                    opt.save_tmp_file = true;
                     ++now_argc;
                     break;
         /*        case 'p':

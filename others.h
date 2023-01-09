@@ -35,11 +35,25 @@ void do_banner(){
 extern convert_option_t opt;
 extern png_data_t       png;
 
-void destroy_pixel_memory( ){
+void free_pixel_memory( ){
+
+    put_info_msg( info_msg.free_memory );
+
     for(ulong32_t hei = 0 ; hei < png.height ; hei++ ){
         free(png.row_ptr[hei]);
     }
     free(png.row_ptr);
+
+    put_info_msg( info_msg.ok );
+}
+
+void try_free_pixel_memory(){
+    for(ulong32_t hei = 0 ; hei < png.height ; hei++ ){
+        if(png.row_ptr[hei])
+            free(png.row_ptr[hei]);
+    }
+    if(png.row_ptr)
+        free(png.row_ptr);
 }
 
 //#define put_err_msg( format , ...) ( 
@@ -66,17 +80,18 @@ void put_info_msg( ccstring_t format , ... ){
     va_end(arg);
 }
 
-void put_debug_msg (const bool if_put  ,
-                   ccstring_t format , ... )
+/*
+void put_debug_msg ( ccstring_t format , ... )
 {
     set_console_color( cmd_text_color.green );
     va_list arg;
     va_start( arg , format );
-    if(if_put)
+    if( opt.print_info_msg )
         vprintf( format , arg );
     va_end(arg);
     set_console_color( cmd_text_color.white );   
 }
+*/
 /*
 void print_opt(const struct ConvertOption* opt){
     set_console_color( CSC_GREEN );

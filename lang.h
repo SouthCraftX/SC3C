@@ -98,12 +98,15 @@ struct
     ccstring_t ok;
     ccstring_t no_override;
     ccstring_t ramdom_color;
+    ccstring_t free_memory;
+    ccstring_t convert_complete;
 
     struct
     {
         ccstring_t initdec;
         ccstring_t alloc;
         ccstring_t get_info;
+        ccstring_t decode;
     } png;
 
     struct
@@ -119,7 +122,10 @@ struct
         ccstring_t write_tmp_file;
     } unz;
 
-
+    struct {
+        ccstring_t create;
+        ccstring_t write;
+    } write_json;
 
 } info_msg;
 

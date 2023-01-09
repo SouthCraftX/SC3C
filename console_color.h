@@ -57,22 +57,22 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 #include <windows.h>
 
 struct {
-    flag8_t black;
-    flag8_t blue;
-    flag8_t green;
-    flag8_t acidblue; 
-    flag8_t red;
-    flag8_t purple; 
-    flag8_t yellow;
-    flag8_t white;
-    flag8_t grey;
-    flag8_t babyblue; 
-    flag8_t acidgreen; 
-    flag8_t lightgreeen; 
-    flag8_t lightred;
-    flag8_t lightpurple; 
-    flag8_t lightyellow;
-    flag8_t lightwhit;
+    flag8_t black       ;
+    flag8_t blue        ;
+    flag8_t green       ;
+    flag8_t acidblue    ;        
+    flag8_t red         ;
+    flag8_t purple      ;      
+    flag8_t yellow      ;
+    flag8_t white       ;
+    flag8_t grey        ;
+    flag8_t babyblue    ;        
+    flag8_t acidgreen   ;       
+    flag8_t lightgreeen ;         
+    flag8_t lightred    ;
+    flag8_t lightpurple ; 
+    flag8_t lightyellow ;
+    flag8_t lightwhite  ;
 } cmd_text_color;
 
 #define set_console_color( color )(\

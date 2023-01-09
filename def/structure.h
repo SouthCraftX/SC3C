@@ -51,6 +51,7 @@ struct ConvertOption {
     bool  ramdom_color : 1;
     bool  save_tmp_file : 1;
     bool  hide_banner : 1;
+    bool  do_help : 1;
     char* input_path;
     char* output_path;
     char* temp_path;

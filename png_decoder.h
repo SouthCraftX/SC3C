@@ -65,9 +65,9 @@ extern png_data_t       png;
 
 void png_decoder( ) {
 
-    png_structp     png_ptr             = NULL;
-    png_infop       info_ptr            = NULL;
-    FILE*           png_fptr            = fopen(opt.temp_path, "rb");
+    png_structp     png_ptr     = NULL;
+    png_infop       info_ptr    = NULL;
+    FILE*           png_fptr    = fopen(opt.temp_path, "rb");
 
     if(!png_fptr)
         put_err_msg_abort(error_msg.png.read);
@@ -137,6 +137,7 @@ void png_decoder( ) {
     }
     if(!test_is_nullptr){
         GOTOLAB_PNG_NULPTR:
+            try_free_pixel_memory();
             put_err_msg_abort( error_msg.png.alloc );
     }
         
@@ -150,24 +151,37 @@ void png_decoder( ) {
 
 void export_to_json(){
 
-    
+    put_info_msg( info_msg.write_json.create );
     FILE* json_fptr = fopen( opt.output_path , "w" );
     if( !json_fptr ){
-        destroy_pixel_memory();
-        put_err_msg_abort( error_msg.write_json.write , opt.output_path);
+        free_pixel_memory();
+        put_err_msg_abort( error_msg.write_json.create , opt.output_path );
     }
-    fputc('[',json_fptr);
+    put_info_msg( info_msg.ok );
+
+    if( fputc('[',json_fptr) == EOF )
+        goto GOTOLAB_WRIFAL;
+    
    //ugly
+    byte_t test_write = 1;
     for( ulong32_t hei = 0 ; hei < png.height ; ++hei ) {
         for( ulong32_t wid = 0 ; wid < png.width ; ++wid ){
-            fprintf(  json_fptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
-                      png.row_ptr[hei][wid*4],png.row_ptr[hei][wid*4+1],
-                      png.row_ptr[hei][wid*4+2],png.row_ptr[hei][wid*4+3]);
+            test_write = fprintf(   json_fptr , "{\"R\":%i,\"G\":%i,\"B\":%i,\"A\":%i},",
+                                    png.row_ptr[hei][wid*4],png.row_ptr[hei][wid*4+1],
+                                    png.row_ptr[hei][wid*4+2],png.row_ptr[hei][wid*4+3])
+            && test_write ;
         }
-   }
-   fseek(json_fptr , -1 , SEEK_CUR );
-   fputs( "]" , json_fptr );
-   fclose( json_fptr );
+    }
+    test_write = (!(fseek(json_fptr , -1 , SEEK_CUR ))&&test_write);
+    if( ( fputs( "]" , json_fptr ) == EOF ) || !test_write )
+        goto GOTOLAB_WRIFAL;
+    
+    fclose( json_fptr );
+
+    return;
+
+    GOTOLAB_WRIFAL:
+        put_err_msg_abort( error_msg.write_json.write );
 }
 
 #endif //#ifndef SC3CHF_PNGDEC

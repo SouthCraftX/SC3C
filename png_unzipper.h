@@ -95,7 +95,7 @@ void clean_cache( ccstring_t cache_path ){
 */
 
 void delete_cache(){
-    remove(opt.temp_path);
+    remove( opt.temp_path );
 }
 
 void unzipper(){
@@ -147,7 +147,7 @@ void unzipper(){
         }
         put_info_msg( info_msg.ok );
 
-        if( file_info.uncompressed_size > 1024*1024 ){
+        if( file_info.uncompressed_size > 128*1024 ){
             unzCloseCurrentFile( zipfile );
             unzClose( zipfile );
             put_err_msg_abort( error_msg.unz.png_too_large );

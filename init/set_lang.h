@@ -48,24 +48,30 @@ Completed in GMT+8 Jan 4th, 2023, 11:52 AM
 
 void set_lang_zh(){
 
-    info_msg.unz.clean_cache        =  "清理缓存...";
-    info_msg.unz.open_zip           =  "打开源文件...";
-    info_msg.unz.global_info        =  "获取源文件的全局信息...";
-    info_msg.unz.cur_file_info      =  "获取UMP颜色配置文件信息...";
-    info_msg.unz.search             =  "搜索noteColors.png...";
+    info_msg.unz.clean_cache        =  "---清理缓存...";
+    info_msg.unz.open_zip           =  "---打开源文件...";
+    info_msg.unz.global_info        =  "---获取源文件的全局信息...";
+    info_msg.unz.cur_file_info      =  "---获取UMP颜色配置文件信息...";
+    info_msg.unz.search             =  "---搜索noteColors.png...";
     info_msg.unz.found              =  "已找到\n";
-    info_msg.unz.cur_file_open      =  "打开UMP颜色配置文件...";
-    info_msg.unz.create_tmp_file    =  "创建临时文件...";
-    info_msg.unz.write_tmp_file     =  "写入临时文件...";
+    info_msg.unz.cur_file_open      =  "---打开UMP颜色配置文件...";
+    info_msg.unz.create_tmp_file    =  "---创建临时文件...";
+    info_msg.unz.write_tmp_file     =  "---写入临时文件...";
 
     info_msg.arg_do_help        =  "运行'SC3C -h'以获得帮助页面\n";
     info_msg.ok                 =  "成功\n";
     info_msg.no_override        =  "已取消文件覆盖，SC3C正在退出...\n";
-    info_msg.ramdom_color       =  "随机化颜色顺序...";
+    info_msg.ramdom_color       =  "---随机化颜色顺序...";
+    info_msg.free_memory        =  "---释放颜色配置内存...";
+    info_msg.convert_complete   =  "JSON文件已成功保存至%s";
 
-    info_msg.png.initdec        =  "初始化PNG解码器...";
-    info_msg.png.alloc          =  "为解码后数据分配内存...";
-    info_msg.png.get_info       =  "获取PNG信息...";
+    info_msg.png.initdec        =  "---初始化PNG解码器...";
+    info_msg.png.alloc          =  "---为解码后数据分配内存...";
+    info_msg.png.get_info       =  "---获取PNG信息...";
+    info_msg.png.decode         =  "---解码PNG文件...";
+
+    info_msg.write_json.create  =  "---创建JSON文件...";
+    info_msg.write_json.write   =  "---写入JSON文件...";
 
     error_msg.write_json.coltm   =   "颜色配置太多！颜色数量最多为655,35种！\n";
     error_msg.write_json.create  =   "%s:无法创建JSON文件！";
@@ -119,23 +125,29 @@ void set_lang_zh(){
 
 void set_lang_en(){
 
-    info_msg.unz.clean_cache        =  "Cleaning cache ...";
-    info_msg.unz.open_zip           =  "Opening the source file ...";
-    info_msg.unz.global_info        =  "Getting the global info of the source file ...";
-    info_msg.unz.cur_file_info      =  "Getting the info of noteColors.png ...";
-    info_msg.unz.cur_file_open      =  "Opening noteColors.png ...";
-    info_msg.unz.search             =  "Looking for noteColors.png ...";
+    info_msg.unz.clean_cache        =  "---Cleaning cache ...";
+    info_msg.unz.open_zip           =  "---Opening the source file ...";
+    info_msg.unz.global_info        =  "---Getting the global info of the source file ...";
+    info_msg.unz.cur_file_info      =  "---Getting the info of noteColors.png ...";
+    info_msg.unz.cur_file_open      =  "---Opening noteColors.png ...";
+    info_msg.unz.search             =  "---Looking for noteColors.png ...";
     info_msg.unz.found              =  "Found\n";
-    info_msg.unz.create_tmp_file    =  "Creating temporary file ...";
-    info_msg.unz.write_tmp_file     =  "Writing temporary file ...";
+    info_msg.unz.create_tmp_file    =  "---Creating temporary file ...";
+    info_msg.unz.write_tmp_file     =  "---Writing temporary file ...";
 
     info_msg.arg_do_help        =  "Run 'SC3C -h' to get help.\n";
     info_msg.ok                 =  "OK\n";
     info_msg.no_override        =  "No override.Exiting ...\n";
+    info_msg.free_memory        =  "---Freeing the memory of the png ...";
+    info_msg.convert_complete   =  "The JSON file was successfully saved to %s";
 
-    info_msg.png.initdec        =  "Succeed to initialise PNG decoder.\n";
-    info_msg.png.alloc          =  "Succeed to allocate memory for pixel data.\n";
+    info_msg.png.initdec        =  "---Initialising PNG decoder...";
+    info_msg.png.alloc          =  "---Allocating memory for pixel data.\n";
+    info_msg.png.get_info       =  "---Getting the info of the png file...";
+    info_msg.png.decode         =  "---Decoding the png file...";
 
+    info_msg.write_json.create  =  "---Creating the JSON file ...";
+    info_msg.write_json.write   =  "---Writing the JSON file ...";
 
 
     error_msg.write_json.coltm   =   "颜色配置太多！颜色数量最多为655,35种！\n";
@@ -166,7 +178,7 @@ void set_lang_en(){
     error_msg.arg.input_path_undef        =   "Source file is not specifiesed!\n";
     error_msg.arg.output_path_undef       =   "Output file is not specifiesed!\n";
 
-    banner_text =   "SC3C\n"
+    banner_text =   "South Craft's Color Configure Converter(SC3C)\n"
                     "Author: South Craft\n"
                     "Version: SC3C 1.0 Stable\n"
                     "Github: https://github.com/SouthCraftX/SC3C\n"
@@ -181,9 +193,10 @@ void set_lang_en(){
                     "  -o\tSpecifies the path to JSON file.\n"
                     " Optional Parameters:\n"
                     "  -t\tSpecifies the path to temporary file.\n"
+                    "  -h\tShow help page(this page)\n"
                     "  -y\tOverwrite the JSON file without asking.\n"
                     "  -r\tRandomise the colour order.(AVAILABLE now!)\n"
-                    //"  -e\tDon't show non-error messages while converting.\n"
+                    "  -e\tDon't show non-error messages while converting.\n"
                     "  -s\tSave the cache file instead of deleting it after convertion.\n";
 
     WARN_OVERRIDE  = "Warning: %s is already exist.Override?(y/n):";
